@@ -566,6 +566,28 @@ video {
   gap: 5rem;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-10 {
+  gap: 2.5rem;
+}
+
+.gap-x-20 {
+  -moz-column-gap: 5rem;
+       column-gap: 5rem;
+}
+
+.gap-x-1 {
+  -moz-column-gap: 0.25rem;
+       column-gap: 0.25rem;
+}
+
 .p-52 {
   padding: 13rem;
+}
+
+.p-20 {
+  padding: 5rem;
 }
