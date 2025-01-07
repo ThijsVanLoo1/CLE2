@@ -1,16 +1,11 @@
-<?php
-
-
-?> <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="./output.css" rel="stylesheet">
-    <title>Document</title>
-    <header>Hallo</header>
+    <title>Reservatie pagina</title>
 </head>
 <body>
 <ul class="days">
