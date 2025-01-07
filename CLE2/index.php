@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Reservatie pagina</title>
 </head>
+<header>Amongus</header>
 <body>
 <ul class="days">
     <li>Ma</li>
