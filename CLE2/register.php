@@ -53,3 +53,4 @@ if (isset($_POST['submit'])) {
     <title>Register Pagina</title>
     <link href="output.css" rel="stylesheet">
 </head>
+<header>Uhh...</header>
