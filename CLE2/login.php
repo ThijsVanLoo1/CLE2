@@ -3,9 +3,8 @@
 global $db;
 require_once "includes/database.php";
 
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
     $email = $_POST['email'];
-
 
 }
 
