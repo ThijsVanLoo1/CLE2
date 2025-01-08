@@ -30,12 +30,13 @@ if(isset($_POST['submit'])) {
 </head>
 <body class="font-asap">
 <nav class="bg-white flex justify-end">
-    <a href="index.php">Home</a>
+    <a href="index.php">Reservering maken</a>
 </nav>
 <main>
+    <h1 class="flex justify-center text-4xl">Log-in</h1>
     <div class="flex justify-center">
     <form class="flex flex-col gap-2">
-        <label for="email" class="">Email</label>
+        <label for="email">Email</label>
         <input type="text" id="email" name="email" class="border-2 border-black rounded">
 
         <label for="password">Password</label>
