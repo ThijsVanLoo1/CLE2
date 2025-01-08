@@ -1,47 +1,42 @@
 <?php
-if (isset($_POST['submit'])) {
+if(isset($_POST['submit'])) {
     /** @var mysqli $db */
     require_once "includes/database.php";
 
-    $account = [
-        $firstName = $_POST['first_name'],
-        $lastName = $_POST['last_name'],
-        $password = $_POST['password'],
-        $email = $_POST['email'],
-        $passwordSecure = '',
-    ];
+    $firstName = mysqli_escape_string($db, $_POST['firstName']);
+    $lastName = mysqli_escape_string($db, $_POST['lastName']);
+    $password = mysqli_escape_string($db, $_POST['password']);
+    $email = mysqli_escape_string($db, $_POST['email']);
 
-    $errors = [];
-
-    if ($_POST['first_name'] == '') {
-        $errors['firstName'] = 'Voer een voornaam in.';
+    if ($firstName === '') {
+        $errors['firstName'] = 'First name cannot be empty';
+    }
+    if ($lastName === '') {
+        $errors['lastName'] = 'Last name cannot be empty';
+    }
+    if ($password === '') {
+        $errors['password'] = 'Password cannot be empty';
+    }
+    if ($email === '') {
+        $errors['email'] = 'Email cannot be empty';
+    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Email is not valid';
     }
 
-    if ($_POST['last_name'] == '') {
-        $errors['lastName'] = 'Voer een achternaam in.';
-    }
+    if (empty($errors)) {
+        $securePassword = password_hash($password, PASSWORD_DEFAULT);
 
-    if ($_POST['password'] == '') {
-        $errors['password'] = 'Voer een wachtwoord in.';
-    }
+        $query = "INSERT INTO users (first_name, last_name, email, password) VALUES ('$firstName', '$lastName', '$email', '$securePassword')";
 
-    if ($_POST['email'] == '') {
-        $errors['email'] = 'Voer een e-mail adres in.';
-    }
-
-    if (!empty($firstName) && !empty($lastName) && !empty($password) && !empty($email)) {
-        $passwordSecure = password_hash($password, PASSWORD_DEFAULT);
-        $query = "INSERT INTO `users` (`first_name`, `last_name`, `password`, `email`) VALUES ('$firstName', '$lastName', '$passwordSecure', '$email')";
         $result = mysqli_query($db, $query)
-        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+        or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+
+        mysqli_close($db);
+
+        header("location:login.php");
+        exit;
     }
-
-
-    mysqli_close($db);
-    header('Location: admin.php');
-    exit;
 }
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -53,4 +48,43 @@ if (isset($_POST['submit'])) {
     <title>Register Pagina</title>
     <link href="output.css" rel="stylesheet">
 </head>
-<header>Uhh...</header>
+<body class="font-asap">
+<nav>
+
+</nav>
+<main>
+    <h1 class="text-[#04588D] font-bold text-4xl flex justify-center">Registreer Docent</h1>
+    <form class="flex flex-col items-center font-bold text-[#04588D] text-2xl" action="" method="post">
+        <div class="flex flex-col items-start gap-2">
+        <label for="firstName">Voornaam</label>
+        <input type="text" id="firstName" name="firstName" value="<?= $firstName ?? '' ?>" class="border-2 border-black rounded">
+            <p class="font-bold text-red-600 text-xl">
+                <?= $errors['firstName'] ?? '' ?>
+            </p>
+
+        <label for="lastName">Achternaam</label>
+        <input type="text" id="lastName" name="lastName" value="<?= $lastName ?? '' ?>" class="border-2 border-black rounded">
+            <p class="font-bold text-red-600 text-xl">
+                <?= $errors['lastName'] ?? '' ?>
+            </p>
+
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" value="<?= $email ?? '' ?>" class="border-2 border-black rounded">
+            <p class="font-bold text-red-600 text-xl">
+                <?= $errors['email'] ?? '' ?>
+            </p>
+
+        <label for="password">Wachtwoord</label>
+        <input type="password" id="password" name="password" value="<?= $password ?? '' ?>" class="border-2 border-black rounded">
+            <p class="font-bold text-red-600 text-xl">
+                <?= $errors['password'] ?? '' ?>
+            </p>
+        </div>
+        <br>
+        <input type="submit" name="submit" value="Registreer" class="rounded-full bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">
+    </form>
+</main>
+<footer>
+
+</footer>
+</body>
