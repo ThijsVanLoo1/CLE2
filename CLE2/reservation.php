@@ -1,13 +1,20 @@
 <?php
-//require_once "includes/database.php";
+
 
 $days = [
-
+    "Ma",
+    "Di",
+    "Wo",
+    "Do",
+    "Vr",
 ];
 
-$times = [
-
-];
+$hours = [
+    "17:45",
+    "18:15",
+    "18:45",
+    "19:15",
+]
 
 ?>
 <!doctype html>
@@ -23,7 +30,7 @@ $times = [
     <title>Reservatie pagina</title>
 </head>
 
-<nav>
+<nav class="text-center bg-cyan-900 font-poppins p-6">
     <a href="login.php">Login</a>
     <a href="logout.php">Logout</a>
     <a href="register.php">Register</a>
@@ -32,20 +39,30 @@ $times = [
     <a href="confirmation.php">Confirmation</a>
 </nav>
 
-<header class="text-center">Rooster</header>
+<header class="text-center font-bold font-asap text-lg p-4">Rooster</header>
 <body>
-<ul class="flex justify-center gap-10">
-    <li>Ma</li>
-    <li>Di</li>
-    <li>Wo</li>
-    <li>Do</li>
-    <li>Vr</li>
-</ul>
-<ul class="flex flex-col items-center gap-10">
-    <li>18:00</li>
-    <li>18:30</li>
-    <li>19:00</li>
-    <li>19:30</li>
-</ul>
+<form class="flex flex-col items-center">
+    <table class="flex flex-col items-center table-auto border-collapse p-6">
+        <thead class="border border-gray-400 px-8 py-2">
+        <tr class="flex gap-12 text-base font-asap">
+            <?php foreach ($days as $day): ?>
+                <th><?php echo $day; ?></th>
+            <?php endforeach; ?>
+        </tr>
+        </thead>
+        <tbody class="font-poppins">
+        <?php
+        for ($i = 0; $i < count($hours); $i++) {
+            echo '<tr>';
+            foreach ($days as $day) {
+                echo '<td class="border border-gray-400 px-4 py-2"><a href="">' . $hours[$i] . '</td>';
+            }
+            echo '</tr>';
+        }
+        ?>
+        </tbody>
+    </table>
+    <input type="submit" value="Bevestig Keuze" class="border border-solid border-gray-400 rounded p-2">
+</form>
 </body>
 </html>
