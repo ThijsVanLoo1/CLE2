@@ -6,7 +6,7 @@ session_start();
 $login = false;
 
 if(isset($_SESSION['user'])) {
-    header('Location: index.php');
+    header('Location: reservation.php');
     exit();
 }
 
@@ -44,7 +44,7 @@ if(isset($_POST['submit'])) {
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user'] = $email;
 
-                header('Location: index.php');
+                header('Location: reservation.php');
                 exit();
             } else {
                 //incorrect log-in
@@ -73,7 +73,7 @@ if(isset($_POST['submit'])) {
 </head>
 <body class="font-asap">
 <nav class="bg-white flex justify-end">
-    <a href="index.php">Reservering maken</a>
+    <a href="reservation.php">Reservering maken</a>
 </nav>
 <main class="bg-white py-6">
     <h1 class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Log-in</h1><br>

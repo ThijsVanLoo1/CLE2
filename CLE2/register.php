@@ -53,7 +53,7 @@ if(isset($_POST['submit'])) {
 
 </nav>
 <main>
-    <h1 class="text-[#04588D] font-bold text-4xl flex justify-center">Registreer Docent</h1>
+    <h1 class="text-[#04588D] font-bold text-4xl flex justify-center m">Registreer Docent</h1><br>
     <form class="flex flex-col items-center font-bold text-[#04588D] text-2xl" action="" method="post">
         <div class="flex flex-col items-start gap-2">
         <label for="firstName">Voornaam</label>
