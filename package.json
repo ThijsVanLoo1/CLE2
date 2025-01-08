@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "tailwindcss": "^3.4.17"
+  },
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ./CLE2/input.css -o ./CLE2/output.css --watch"
   }
 }
