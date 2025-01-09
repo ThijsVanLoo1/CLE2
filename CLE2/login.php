@@ -6,7 +6,7 @@ session_start();
 $login = false;
 
 if(isset($_SESSION['user'])) {
-    header('Location: reservation.php');
+    header('Location: index.php');
     exit();
 }
 
@@ -39,12 +39,11 @@ if(isset($_POST['submit'])) {
         if(mysqli_num_rows($result) === 1) {
             $row = mysqli_fetch_assoc($result);
 
-
             // check if password matches in database
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user'] = $email;
 
-                header('Location: reservation.php');
+                header('Location: index.php');
                 exit();
             } else {
                 //incorrect log-in
@@ -78,14 +77,20 @@ if(isset($_POST['submit'])) {
 <main class="bg-white py-6">
     <h1 class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Log-in</h1><br>
     <div class="flex justify-center">
-    <form class="flex flex-col gap-2">
+    <form class="flex flex-col gap-2" action="" method="post">
         <label for="email">Email</label>
         <input type="text" id="email" name="email" class="border-2 border-black rounded">
+        <p class="font-bold text-red-600 text-xl">
+            <?= $errors['email'] ?? '' ?>
+        </p>
 
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" class="border-2 border-black rounded">
+        <input type="password" id="password" name="password" class="border-2 border-black rounded">
+        <p class="font-bold text-red-600 text-xl">
+            <?= $errors['password'] ?? '' ?>
+        </p>
 
-        <input type="submit" value="Log-in" class="rounded-full bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">
+        <input type="submit" name=submit value="Log-in" class="rounded-full bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">
     </form>
     </div>
 </main>
