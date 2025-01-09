@@ -39,6 +39,7 @@ if(isset($_POST['submit'])) {
         if(mysqli_num_rows($result) === 1) {
             $row = mysqli_fetch_assoc($result);
 
+
             // check if password matches in database
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user'] = $email;

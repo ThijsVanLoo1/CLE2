@@ -1,3 +1,16 @@
+<?php
+session_start();
+print_r($_SESSION);
+$link = "login.php";
+$text = "Login";
+if (!empty($_SESSION) === true) {
+    $link = "logout.php";
+    $text = "Logout";
+} else {
+    $link = "login.php";
+    $text = "Login";
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,8 +31,9 @@
     </div>
     <div class="hidden md:flex gap-6 nav-links">
         <a href="#" class="text-white hover:text-[#003060]">Home</a>
-        <a href="#" class="text-white hover:text-[#003060]">Afspraak maken</a>
+        <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
         <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -32,11 +46,13 @@
     <a href="index.php" class="text-white">Home</a>
     <a href="#" class="text-white">Afspraak maken</a>
     <a href="#" class="text-white">Contact</a>
+    <a href="reservation.php" class="text-white hover:text-[#003060]">Login</a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060]">Home</a>
     <a href="" class="hover:text-[#003060]">Afspraak maken</a>
     <a href="" class="hover:text-[#003060]">Contact</a>
+    <a href="reservation.php" class="text-white hover:text-[#003060]">Login</a>
 </div>
 <header class="sm:flex">
     <img class="sm:w-1/2 w-full h-auto"
