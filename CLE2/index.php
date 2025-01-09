@@ -1,6 +1,5 @@
 <?php
 session_start();
-print_r($_SESSION);
 $link = "login.php";
 $text = "Login";
 if (!empty($_SESSION) === true) {
