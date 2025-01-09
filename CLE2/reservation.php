@@ -1,24 +1,3 @@
-<?php
-
-
-$days = [
-    "Ma",
-    "Di",
-    "Wo",
-    "Do",
-    "Vr",
-];
-
-$dates = [
-
-];
-
-$hours = [
-    "12:30",
-    "20:00",
-]
-
-?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,6 +10,14 @@ $hours = [
     <link href="output.css" rel="stylesheet">
     <title>Reservatie pagina</title>
     <script>
+        function showDays() {
+            const weeks = document.getElementById('weeks').value;
+            const daysContainer = document.getElementById('days-container');
+            if (weeks) {
+                daysContainer.style.display = 'block'; // Show the days dropdown
+            }
+        }
+
         function timeSelect() {
             const selectedDay = document.getElementById('days').value;
             const timeContainer = document.getElementById('time-container');
@@ -68,50 +55,33 @@ $hours = [
     <a href="confirmation.php">Confirmation</a>
 </nav>
 
-<header class="text-center font-bold font-asap text-lg p-4">Rooster</header>
+<header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
 <body>
-<form class="flex justify-center" method="post">
-    <label for="weeks">Selecteer Week</label>
-    <select id="weeks" name="weeks" size="4">
-        <option value="week1">Week 1</option>
-        <option value="week2">Week 2</option>
-        <option value="week3">Week 3</option>
-        <option value="week4">Week 4</option>
-    </select>
-    <label for="days"></label>
-    <select id="days" name="days" size="5" onchange="timeSelect()">
-        <option value="day1">Ma</option>
-        <option value="day2">Di</option>
-        <option value="day3">Wo</option>
-        <option value="day4">Do</option>
-        <option value="day5">Vr</option>
-    </select>
+<div class="flex justify-center">
+    <form class="flex flex-col justify-between gap-2" method="post">
+        <label for="weeks"></label>
+        <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
+            <option value="" disabled selected>Selecteer een week.</option>
+            <option value="week1">Week 1</option>
+            <option value="week2">Week 2</option>
+            <option value="week3">Week 3</option>
+            <option value="week4">Week 4</option>
+        </select>
+        <div id="days-container" style="display: none;">
+            <label for="days"></label>
+            <select id="days" name="days" class="border-2 border-black rounded p-6" onchange="timeSelect()">
+                <option value="" disabled selected>Selecteer een dag.</option>
+                <option value="Maandag">Ma</option>
+                <option value="Dinsdag">Di</option>
+                <option value="Woensdag">Wo</option>
+                <option value="Donderdag">Do</option>
+                <option value="Vrijdag">Vr</option>
+            </select>
+        </div>
 
-    <div id="time-container" class="flex flex-col items-center mt-4"></div>
-    <!--    <table class="flex flex-col items-center table-auto border-collapse p-6">-->
-    <!--        <thead class="border border-gray-400 px-8 py-2">-->
-    <!--        <tr class="flex gap-12 text-base font-asap">-->
-    <!--            --><?php //foreach ($days as $day): ?>
-    <!--                <th>--><?php //echo $day; ?><!--</th>-->
-    <!--            --><?php //endforeach; ?>
-    <!--        </tr>-->
-    <!--        </thead>-->
-    <!--        <tbody class="font-poppins">-->
-    <!--        --><?php
-    //        for ($i = 0; $i < count($hours); $i++) {
-    //            echo '<tr>';
-    //            foreach ($days as $day) {
-    //                echo '<td class="border border-gray-400 px-4 py-2"><a href="">' . $hours[$i] . '</td>';
-    //            }
-    //            echo '</tr>';
-    //        }
-    //        ?>
-    <!--        </tbody>-->
-    <!--    </table>-->
-    <!--    <table>-->
-    <!---->
-    <!--    </table>-->
-    <input type="submit" value="Bevestig Keuze" class="border border-solid border-gray-400 rounded p-2">
-</form>
+        <div id="time-container" class="flex flex-col items-center mt-4 border-2 border-black rounded"></div>
+        <input type="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+    </form>
+</div>
 </body>
 </html>
