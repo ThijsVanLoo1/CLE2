@@ -29,7 +29,7 @@ if (!empty($_SESSION) === true) {
         </a>
     </div>
     <div class="hidden md:flex gap-6 nav-links">
-        <a href="#" class="text-white hover:text-[#003060]">Home</a>
+        <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
         <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
         <a href="#" class="text-white hover:text-[#003060]">Contact</a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
@@ -43,13 +43,13 @@ if (!empty($_SESSION) === true) {
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] p-4 md:hidden">
     <a href="index.php" class="text-white">Home</a>
-    <a href="#" class="text-white">Afspraak maken</a>
+    <a href="reservation.php" class="text-white">Afspraak maken</a>
     <a href="#" class="text-white">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060]">Home</a>
-    <a href="" class="hover:text-[#003060]">Afspraak maken</a>
+    <a href="reservation.php" class="hover:text-[#003060]">Afspraak maken</a>
     <a href="" class="hover:text-[#003060]">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
 </div>
@@ -84,7 +84,7 @@ if (!empty($_SESSION) === true) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="#albums">Afspraak maken</a></li>
+        <li><a href="reservation.php">Afspraak maken</a></li>
         <li><a href="#over">Contact</a></li>
     </ul>
 </footer>
