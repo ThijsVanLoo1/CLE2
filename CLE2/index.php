@@ -45,13 +45,13 @@ if (!empty($_SESSION) === true) {
     <a href="index.php" class="text-white">Home</a>
     <a href="#" class="text-white">Afspraak maken</a>
     <a href="#" class="text-white">Contact</a>
-    <a href="reservation.php" class="text-white hover:text-[#003060]">Login</a>
+    <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060]">Home</a>
     <a href="" class="hover:text-[#003060]">Afspraak maken</a>
     <a href="" class="hover:text-[#003060]">Contact</a>
-    <a href="reservation.php" class="text-white hover:text-[#003060]">Login</a>
+    <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
 </div>
 <header class="sm:flex">
     <img class="sm:w-1/2 w-full h-auto"
