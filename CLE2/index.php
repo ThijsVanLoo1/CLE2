@@ -66,7 +66,7 @@ if (!empty($_SESSION) === true) {
             het beste past bij jouw agenda.
         </p>
         <a class="p-2 bg-[#003060] text-center rounded hover:bg-white hover:text-[#003060] transition duration-300 w-28"
-           href="#">Plan Nu</a>
+           href="reservation.php">Plan Nu</a>
     </div>
 </header>
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">

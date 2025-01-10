@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -39,10 +42,12 @@
     <a href="" class="hover:text-[#003060]">Contact</a>
 </div>
 <header class="sm:flex flex h-100v w-100w bg-[#003060] border-b border-black xl:p-20 xl:mx-52 p-5 flex-col gap-4 xl:h-70v">
-    <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je reservatie &lt;naam&gt;.</h1>
+    <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je
+        reservatie <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?></h1>
     <p class="text-white text-base">
-        Je hebt een reservatie met docent &lt;naam&gt;. Deze afspraak is op &lt;datum&gt; om &lt;tijdstip&gt; en zal
-        plaatsvinden op &lt;locatie&gt;. De afspraak staat geregistreerd onder de naam &lt;naam&gt;. Vergeet niet om
+        Je hebt een reservatie met docent <?= $_SESSION['docent_id'] ?>. Deze afspraak is op <?= $_SESSION['date'] ?>
+        om <?= $_SESSION['time_slot'] ?>. De afspraak staat geregistreerd onder de
+        naam <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?>. Vergeet niet om
         eventuele vragen of onderwerpen die je wilt bespreken voor te bereiden, zodat je het meeste uit je afspraak kunt
         halen. Als je verhinderd bent, laat dit dan tijdig weten om een nieuwe afspraak te plannen.
 

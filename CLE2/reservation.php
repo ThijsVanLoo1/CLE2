@@ -1,15 +1,22 @@
 <?php
 /** @var mysqli $db */
 require_once "includes/database.php";
+session_start();
+// 1. kies een week
+// 2. zet de value van die week zijn id
+// 3. haal de datum uit het database voor die week
+// 4. zet de value in de datum's
+$query = "SELECT * FROM weeks";
+$result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+$weeks = [];
 
-$first_name = "";
-$last_name = "";
-$email = "";
-$phone_number = "";
-$comment = "";
-$date = "";
-$time_slot = "";
-$error = "";
+while ($row = mysqli_fetch_assoc($result)) {
+    $weeks[] = $row;
+}
+$week1 = $weeks[0];
+$week2 = $weeks[1];
+$week3 = $weeks[2];
+$week4 = $weeks[3];
 
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
@@ -17,6 +24,7 @@ if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $phone_number = $_POST['phone_number'];
     $comment = $_POST['comment'];
+    $user_id = $_POST['user_id'];
     $date = $_POST['days'];
     $time_slot = $_POST['times'];
 
@@ -39,17 +47,24 @@ if (isset($_POST['submit'])) {
     }
 
     if (!empty($first_name) && !empty($last_name) && !empty($email) && !empty($phone_number)) {
-
         $first_name = mysqli_real_escape_string($db, $first_name);
         $last_name = mysqli_real_escape_string($db, $last_name);
         $email = mysqli_real_escape_string($db, $email);
         $phone_number = mysqli_real_escape_string($db, $phone_number);
         $time_slot = mysqli_real_escape_string($db, $time_slot);
         $date = mysqli_real_escape_string($db, $date);
+        $user_id = mysqli_real_escape_string($db, $user_id);
+        $comment = mysqli_real_escape_string($db, $comment);
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$date', '$time_slot')";
-        $result = mysqli_query($db, $query)
-        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['last_name'] = $last_name;
+        $_SESSION['date'] = $date;
+        $_SESSION['docent_id'] = $user_id;
+        $_SESSION['time_slot'] = $time_slot;
+
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`,`user_id`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$time_slot')";
+        $result = mysqli_query($db, $query) or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+
         header('Location: confirmation.php');
         mysqli_close($db);
         exit;
@@ -60,19 +75,36 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
     <link href="output.css" rel="stylesheet">
     <title>Reservatie pagina</title>
     <script>
+        const weeksData = {
+            "<?= $week1['week_id'] ?>": ["<?= $week1['day_1'] ?>", "<?= $week1['day_2'] ?>", "<?= $week1['day_3'] ?>", "<?= $week1['day_4'] ?>", "<?= $week1['day_5'] ?>"],
+            "<?= $week2['week_id'] ?>": ["<?= $week2['day_1'] ?>", "<?= $week2['day_2'] ?>", "<?= $week2['day_3'] ?>", "<?= $week2['day_4'] ?>", "<?= $week2['day_5'] ?>"],
+            "<?= $week3['week_id'] ?>": ["<?= $week3['day_1'] ?>", "<?= $week3['day_2'] ?>", "<?= $week3['day_3'] ?>", "<?= $week3['day_4'] ?>", "<?= $week3['day_5'] ?>"],
+            "<?= $week4['week_id'] ?>": ["<?= $week4['day_1'] ?>", "<?= $week4['day_2'] ?>", "<?= $week4['day_3'] ?>", "<?= $week4['day_4'] ?>", "<?= $week4['day_5'] ?>"]
+        };
+
         function showDays() {
-            const weeks = document.getElementById('weeks').value;
+            const selectedWeek = document.getElementById('weeks').value;
             const daysContainer = document.getElementById('days-container');
-            if (weeks) {
+            const daysSelect = document.getElementById('days');
+
+            daysSelect.innerHTML = '<option value="" disabled selected>Selecteer een dag.</option>';
+
+            if (selectedWeek && weeksData[selectedWeek]) {
+                weeksData[selectedWeek].forEach((day, index) => {
+                    const option = document.createElement('option');
+                    option.value = day;
+                    option.textContent = ["Ma", "Di", "Wo", "Do", "Vr"][index];
+                    daysSelect.appendChild(option);
+                });
                 daysContainer.style.display = 'block';
+            } else {
+                daysContainer.style.display = 'none';
             }
         }
 
@@ -90,7 +122,7 @@ if (isset($_POST['submit'])) {
             select.setAttribute('id', 'times');
             select.setAttribute('name', 'times');
             select.setAttribute('onchange', 'showData()');
-            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded')
+            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
 
             const times = ["12:30", "20:00"];
             times.forEach(time => {
@@ -114,13 +146,22 @@ if (isset($_POST['submit'])) {
     </script>
 </head>
 
-<nav class="text-center bg-cyan-900 font-poppins p-6">
-    <a href="login.php">Login</a>
-    <a href="logout.php">Logout</a>
-    <a href="register.php">Register</a>
-    <a href="admin.php">Admin</a>
-    <a href="overview.php">Overview</a>
-    <a href="confirmation.php">Confirmation</a>
+<nav class="flex items-center justify-between p-6 bg-[#04588D]">
+    <div>
+        <a href="index.php">
+            <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" alt="Logo"
+                 class="w-20 h-20">
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 nav-links">
+        <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
+        <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+    </div>
+    <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+    </div>
 </nav>
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
@@ -130,20 +171,15 @@ if (isset($_POST['submit'])) {
         <label for="weeks"></label>
         <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
             <option value="" disabled selected>Selecteer een week.</option>
-            <option value="week1">Week 1</option>
-            <option value="week2">Week 2</option>
-            <option value="week3">Week 3</option>
-            <option value="week4">Week 4</option>
+            <option value="<?= $week1['week_id'] ?>">Week 1</option>
+            <option value="<?= $week2['week_id'] ?>">Week 2</option>
+            <option value="<?= $week3['week_id'] ?>">Week 3</option>
+            <option value="<?= $week4['week_id'] ?>">Week 4</option>
         </select>
         <div id="days-container" style="display: none;">
             <label for="days"></label>
             <select id="days" name="days" class="border-2 border-black rounded p-6" onchange="timeSelect()">
                 <option value="" disabled selected>Selecteer een dag.</option>
-                <option value="Maandag">Ma</option>
-                <option value="Dinsdag">Di</option>
-                <option value="Woensdag">Wo</option>
-                <option value="Donderdag">Do</option>
-                <option value="Vrijdag">Vr</option>
             </select>
         </div>
 
@@ -151,19 +187,22 @@ if (isset($_POST['submit'])) {
         <div id="data-container" class="flex flex-col gap-4" style="display: none;">
             <label for="first_name">Voornaam</label>
             <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($first_name) ?>">
+                   value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
             <label for="last_name">Achternaam</label>
             <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($last_name) ?>">
+                   value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($email) ?>">
+                   value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
+            <label for="user_id">Docent</label>
+            <input type="text" id="user_id" name="user_id" class="border-2 border-black rounded p-4"
+                   value="<?= htmlspecialchars($_POST['user_id'] ?? $user_id ?? "") ?>">
             <label for="phone_number">Telefoon Nummer</label>
             <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($phone_number) ?>">
+                   value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
             <label for="comment">Comment</label>
             <textarea rows="5" cols="3" type="text" id="comment" name="comment"
-                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($comment) ?></textarea>
+                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
         </div>
         <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
     </form>
