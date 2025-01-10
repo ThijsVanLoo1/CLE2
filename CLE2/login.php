@@ -79,8 +79,22 @@ if(isset($_POST['submit'])) {
     <title>Log-in</title>
 </head>
 <body class="font-asap">
-<nav class="bg-white flex justify-end">
-    <a href="reservation.php">Reservering maken</a>
+<nav class="flex items-center justify-between p-6 bg-[#04588D]">
+    <div>
+        <a href="index.php">
+            <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" alt="Logo"
+                 class="w-20 h-20">
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 nav-links">
+        <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
+        <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+    </div>
+    <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+    </div>
 </nav>
 <main class="bg-white py-6">
     <h1 class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Log-in</h1><br>
