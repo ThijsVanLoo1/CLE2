@@ -1,3 +1,24 @@
+<?php
+
+
+$days = [
+    "Ma",
+    "Di",
+    "Wo",
+    "Do",
+    "Vr",
+];
+
+$dates = [
+
+];
+
+$hours = [
+    "12:30",
+    "20:00",
+]
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,14 +31,6 @@
     <link href="output.css" rel="stylesheet">
     <title>Reservatie pagina</title>
     <script>
-        function showDays() {
-            const weeks = document.getElementById('weeks').value;
-            const daysContainer = document.getElementById('days-container');
-            if (weeks) {
-                daysContainer.style.display = 'block'; // Show the days dropdown
-            }
-        }
-
         function timeSelect() {
             const selectedDay = document.getElementById('days').value;
             const timeContainer = document.getElementById('time-container');
@@ -79,6 +92,9 @@
             </select>
         </div>
 
+    <div id="time-container" class="flex flex-col items-center mt-4"></div>
+    <input type="submit" value="Bevestig Keuze" class="border border-solid border-gray-400 rounded p-2">
+</form>
         <div id="time-container" class="flex flex-col items-center mt-4 border-2 border-black rounded"></div>
         <input type="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
     </form>
