@@ -1,3 +1,61 @@
+<?php
+/** @var mysqli $db */
+require_once "includes/database.php";
+
+$first_name = "";
+$last_name = "";
+$email = "";
+$phone_number = "";
+$comment = "";
+$date = "";
+$time_slot = "";
+$error = "";
+
+if (isset($_POST['submit'])) {
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $email = $_POST['email'];
+    $phone_number = $_POST['phone_number'];
+    $comment = $_POST['comment'];
+    $date = $_POST['days'];
+    $time_slot = $_POST['times'];
+
+    $errors = [];
+
+    if ($_POST['first_name'] == '') {
+        $errors['emptyFirstName'] = 'Vul je voornaam in.';
+    }
+
+    if ($_POST['last_name'] == '') {
+        $errors['emptyLastName'] = 'Vul je achternaam in.';
+    }
+
+    if ($_POST['email'] == '') {
+        $errors['emptyEmail'] = 'Vul je email in.';
+    }
+
+    if ($_POST['phone_number'] == '') {
+        $errors['emptyPhoneNumber'] = 'Vul je telefoonnummer in.';
+    }
+
+    if (!empty($first_name) && !empty($last_name) && !empty($email) && !empty($phone_number)) {
+
+        $first_name = mysqli_real_escape_string($db, $first_name);
+        $last_name = mysqli_real_escape_string($db, $last_name);
+        $email = mysqli_real_escape_string($db, $email);
+        $phone_number = mysqli_real_escape_string($db, $phone_number);
+        $time_slot = mysqli_real_escape_string($db, $time_slot);
+        $date = mysqli_real_escape_string($db, $date);
+
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$date', '$time_slot')";
+        $result = mysqli_query($db, $query)
+        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+        header('Location: confirmation.php');
+        mysqli_close($db);
+        exit;
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,7 +72,7 @@
             const weeks = document.getElementById('weeks').value;
             const daysContainer = document.getElementById('days-container');
             if (weeks) {
-                daysContainer.style.display = 'block'; // Show the days dropdown
+                daysContainer.style.display = 'block';
             }
         }
 
@@ -31,8 +89,10 @@
             const select = document.createElement('select');
             select.setAttribute('id', 'times');
             select.setAttribute('name', 'times');
+            select.setAttribute('onchange', 'showData()');
+            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded')
 
-            const times = ["12:30", "20:00"]; // Hardcoded timestamps
+            const times = ["12:30", "20:00"];
             times.forEach(time => {
                 const option = document.createElement('option');
                 option.setAttribute('value', time);
@@ -42,6 +102,14 @@
 
             timeContainer.appendChild(label);
             timeContainer.appendChild(select);
+        }
+
+        function showData() {
+            const timeSlot = document.getElementById('times').value;
+            const dataContainer = document.getElementById('data-container');
+            if (timeSlot) {
+                dataContainer.style.display = 'flex';
+            }
         }
     </script>
 </head>
@@ -58,7 +126,7 @@
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
 <body>
 <div class="flex justify-center">
-    <form class="flex flex-col justify-between gap-2" method="post">
+    <form class="flex flex-col justify-between gap-2" method="post" action="">
         <label for="weeks"></label>
         <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
             <option value="" disabled selected>Selecteer een week.</option>
@@ -79,8 +147,25 @@
             </select>
         </div>
 
-        <div id="time-container" class="flex flex-col items-center mt-4 border-2 border-black rounded"></div>
-        <input type="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+        <div id="time-container"></div>
+        <div id="data-container" class="flex flex-col gap-4" style="display: none;">
+            <label for="first_name">Voornaam</label>
+            <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
+                   value="<?= htmlspecialchars($first_name) ?>">
+            <label for="last_name">Achternaam</label>
+            <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
+                   value="<?= htmlspecialchars($last_name) ?>">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
+                   value="<?= htmlspecialchars($email) ?>">
+            <label for="phone_number">Telefoon Nummer</label>
+            <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
+                   value="<?= htmlspecialchars($phone_number) ?>">
+            <label for="comment">Comment</label>
+            <textarea rows="5" cols="3" type="text" id="comment" name="comment"
+                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($comment) ?></textarea>
+        </div>
+        <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
     </form>
 </div>
 </body>
