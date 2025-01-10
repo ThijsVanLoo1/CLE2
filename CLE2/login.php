@@ -43,9 +43,16 @@ if(isset($_POST['submit'])) {
             // check if password matches in database
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user'] = $email;
+                $_SESSION['id'] = $row['id'];
+                $_SESSION['admin_key'] = $row['admin_key'];
 
-                header('Location: index.php');
-                exit();
+                if($_SESSION['admin_key'] !== null) {
+                    header('Location: admin.php');
+                    exit();
+                } else {
+                    header('Location: overview.php');
+                    exit();
+                }
             } else {
                 //incorrect log-in
                 $errors['loginFailed'] = 'Email or password not correct';
