@@ -47,7 +47,7 @@ if (!empty($_SESSION) === true) {
     <a href="#" class="text-white">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
 </div>
-<div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+<div id="mobile-menu" class="hidden sm:hidden flex sm:flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060]">Home</a>
     <a href="reservation.php" class="hover:text-[#003060]">Afspraak maken</a>
     <a href="" class="hover:text-[#003060]">Contact</a>

@@ -18,6 +18,15 @@ $week2 = $weeks[1];
 $week3 = $weeks[2];
 $week4 = $weeks[3];
 
+$query = "SELECT id, first_name, last_name FROM users";
+$result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+$docenten = [];
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $docenten[] = $row;
+}
+
+$current_user_id = $_POST['user_id'] ?? $user_id ?? "";
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -195,8 +204,14 @@ if (isset($_POST['submit'])) {
             <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
                    value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
             <label for="user_id">Docent</label>
-            <input type="text" id="user_id" name="user_id" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($_POST['user_id'] ?? $user_id ?? "") ?>">
+            <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
+                <option value="">Selecteer een docent</option>
+                <?php foreach ($docenten as $docent): ?>
+                    <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
             <label for="phone_number">Telefoon Nummer</label>
             <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
                    value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
