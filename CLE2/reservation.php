@@ -152,6 +152,7 @@ if (isset($_POST['submit'])) {
                 dataContainer.style.display = 'flex';
             }
         }
+
     </script>
 </head>
 
@@ -172,7 +173,14 @@ if (isset($_POST['submit'])) {
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
     </div>
 </nav>
-
+<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+</div>
+<div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+    <a href="" class="hover:text-[#003060] block ">Contact</a>
+</div>
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
 <body>
 <div class="flex justify-center">
@@ -223,4 +231,14 @@ if (isset($_POST['submit'])) {
     </form>
 </div>
 </body>
+<script>
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
+    });
+</script>
 </html>

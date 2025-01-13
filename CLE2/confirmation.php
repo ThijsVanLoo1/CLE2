@@ -1,5 +1,14 @@
 <?php
 session_start();
+$link = "login.php";
+$text = "Login";
+if (!empty($_SESSION) === true) {
+    $link = "logout.php";
+    $text = "Logout";
+} else {
+    $link = "login.php";
+    $text = "Login";
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,15 +40,17 @@ session_start();
     </div>
 </nav>
 
-<div class="nav-links hidden flex-col gap-4 bg-[#04588D] p-4 md:hidden">
-    <a href="index.php" class="text-white">Home</a>
-    <a href="reservation.php" class="text-white">Afspraak maken</a>
-    <a href="#" class="text-white">Contact</a>
+<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
+    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
-    <a href="index.php" class="hover:text-[#003060]">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060]">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060]">Contact</a>
+    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
+    <a href="" class="hover:text-[#003060] block ">Contact</a>
+    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
 </div>
 <header class="sm:flex flex h-100v w-100w bg-[#003060] border-b border-black xl:p-20 xl:mx-52 p-5 flex-col gap-4 xl:h-70v">
     <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je
@@ -75,12 +86,13 @@ session_start();
 </footer>
 
 <script>
-    const menuToggle = document.querySelector("#mobile-menu");
-    const navLinks = document.querySelector(".nav-links");
-
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
     menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("hidden");
-        menuToggle.classList.toggle("open");
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
     });
 </script>
 </body>
