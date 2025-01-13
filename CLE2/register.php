@@ -1,4 +1,5 @@
 <?php
+//after register button is pressed
 if(isset($_POST['submit'])) {
     /** @var mysqli $db */
     require_once "includes/database.php";
@@ -7,7 +8,7 @@ if(isset($_POST['submit'])) {
     $lastName = mysqli_escape_string($db, $_POST['lastName']);
     $password = mysqli_escape_string($db, $_POST['password']);
     $email = mysqli_escape_string($db, $_POST['email']);
-
+//check if values are empty
     if ($firstName === '') {
         $errors['firstName'] = 'First name cannot be empty';
     }
@@ -22,7 +23,8 @@ if(isset($_POST['submit'])) {
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'Email is not valid';
     }
-
+//check if there are no errors,
+// then insert into database
     if (empty($errors)) {
         $securePassword = password_hash($password, PASSWORD_DEFAULT);
 

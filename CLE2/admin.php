@@ -2,12 +2,23 @@
 
 session_start();
 
-print_r($_SESSION);
+global $db;
+require_once "includes/database.php";
 
-if($_SESSION['admin_key'] === null) {
+if ($_SESSION['admin_key'] === null) {
     header('location: overview.php');
 }
+$query = "SELECT * FROM reservations";
 
+
+$result = mysqli_query($db, $query)
+or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+
+$reservations = [];
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $reservations[] = $row;
+}
 ?>
 <!doctype html>
 <html lang="en">

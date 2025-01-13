@@ -9,19 +9,20 @@ if(!isset($_SESSION['user'])) {
     exit();
 }
 
+//check if user is admin
 if($_SESSION['admin_key'] !== null) {
     header('Location: admin.php');
     exit();
 }
 
+//gives user correct id
 $id = $_SESSION['id'];
 
+//get data from database
 global $db;
 require_once "includes/database.php";
 
 $query = "SELECT * FROM reservations WHERE user_id = $id";
-
-
 
 $result = mysqli_query($db, $query)
 or die('Error '.mysqli_error($db).' with query '.$query);
@@ -67,7 +68,7 @@ mysqli_close($db);
                     </tr>
                     </tfoot>
                     <tbody>
-                    <!--        Loop through all albums in the collection-->
+                    <!--        print reservations information-->
                     <?php
 
                     for ($i = 0; $i < count($reservations); $i++) {

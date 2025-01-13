@@ -41,17 +41,17 @@ if (!empty($_SESSION) === true) {
     </div>
 </nav>
 
-<div class="nav-links hidden flex-col gap-4 bg-[#04588D] p-4 md:hidden">
-    <a href="index.php" class="text-white">Home</a>
-    <a href="reservation.php" class="text-white">Afspraak maken</a>
-    <a href="#" class="text-white">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
+    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
-    <a href="index.php" class="hover:text-[#003060]">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060]">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060]">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
+    <a href="" class="hover:text-[#003060] block ">Contact</a>
+    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
 </div>
 <header class="sm:flex">
     <img class="sm:w-1/2 w-full h-auto"
@@ -66,7 +66,7 @@ if (!empty($_SESSION) === true) {
             het beste past bij jouw agenda.
         </p>
         <a class="p-2 bg-[#003060] text-center rounded hover:bg-white hover:text-[#003060] transition duration-300 w-28"
-           href="#">Plan Nu</a>
+           href="reservation.php">Plan Nu</a>
     </div>
 </header>
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
@@ -90,12 +90,13 @@ if (!empty($_SESSION) === true) {
 </footer>
 
 <script>
-    const menuToggle = document.querySelector("#mobile-menu");
-    const navLinks = document.querySelector(".nav-links");
-
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
     menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("hidden");
-        menuToggle.classList.toggle("open");
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
     });
 </script>
 </body>
