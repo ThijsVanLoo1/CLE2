@@ -68,31 +68,38 @@ if (isset($_POST['submit'])) {
     <link href="output.css" rel="stylesheet">
     <title>Reservatie pagina</title>
     <script>
+        //Functie om de dagen select op te roepen.
         function showDays() {
             const weeks = document.getElementById('weeks').value;
             const daysContainer = document.getElementById('days-container');
+            //Als de week is geselecteerd verander de display naar block om het zichtbaar te maken.
             if (weeks) {
                 daysContainer.style.display = 'block';
             }
         }
 
+        //Funcitie om een display te maken met alle beschikbare tijden.
         function timeSelect() {
             const selectedDay = document.getElementById('days').value;
             const timeContainer = document.getElementById('time-container');
 
             timeContainer.innerHTML = '';
 
+            //Maak een label voor de tijd select.
             const label = document.createElement('label');
             label.setAttribute('for', 'times');
             label.textContent = `Selecteer Tijd voor ${selectedDay}`;
 
+            //Maak een form met bijbehorende gegevens.
             const select = document.createElement('select');
             select.setAttribute('id', 'times');
             select.setAttribute('name', 'times');
             select.setAttribute('onchange', 'showData()');
             select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded')
 
+            //Lijst met tijd. Moet nog worden aangepast om met PHP te werken.
             const times = ["12:30", "20:00"];
+            //Voor elke tijd maak een optie.
             times.forEach(time => {
                 const option = document.createElement('option');
                 option.setAttribute('value', time);
@@ -104,9 +111,11 @@ if (isset($_POST['submit'])) {
             timeContainer.appendChild(select);
         }
 
+        //Funcitie die alle andere gegevens laat zien.
         function showData() {
             const timeSlot = document.getElementById('times').value;
             const dataContainer = document.getElementById('data-container');
+            //Display flex wordt gebruikt om de velden in een lijst te zetten.
             if (timeSlot) {
                 dataContainer.style.display = 'flex';
             }
