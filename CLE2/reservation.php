@@ -11,6 +11,11 @@ $date = "";
 $time_slot = "";
 $error = "";
 
+if (isset($_SESSION['user'])) {
+    header('Location: index.php');
+    exit();
+}
+
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
