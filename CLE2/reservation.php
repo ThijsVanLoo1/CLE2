@@ -11,6 +11,19 @@ $date = "";
 $time_slot = "";
 $error = "";
 
+$times = [];
+$time = strtotime('12:30');
+$addTime = 10;
+
+while ($time <= strtotime('20:00')) {
+
+    $times[] = date('H:i', $time);
+
+    $time += 60 * $addTime;
+}
+
+$availableTimes = [];
+
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
