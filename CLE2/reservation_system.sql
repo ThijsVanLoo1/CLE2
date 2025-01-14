@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 10 jan 2025 om 14:37
+-- Gegenereerd op: 14 jan 2025 om 08:49
 -- Serverversie: 8.4.2
 -- PHP-versie: 8.3.15
 
@@ -50,7 +50,13 @@ INSERT INTO `reservations` (`id`, `first_name`, `last_name`, `email`, `phone_num
                                                                                                                                      (4, 'j', 'j', 'j@j.nl', '08133333', 'j', 1, '2025-01-10', '20:00:00'),
                                                                                                                                      (5, 'j', 'b', 'j@j.nl', '081222222', 'j', 1, '2025-02-11', '20:00:00'),
                                                                                                                                      (6, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (7, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00');
+                                                                                                                                     (7, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00'),
+                                                                                                                                     (8, 'Chayenne', 'Rademaker', 'chayenneisabela@gmail.com', '112', 'pelippers zijn lief', 1, '2025-02-12', '20:00:00'),
+                                                                                                                                     (9, 'j', 'j', 'jordi1030@outlook.com', '6', '2', 4, '2025-02-10', '20:00:00'),
+                                                                                                                                     (10, 'j', 'b', 'L@l.nl', '5646588', 'henk', 1, '2025-01-10', '20:00:00'),
+                                                                                                                                     (11, 'j', 'b', 'j@j.nl', '5', 'j', 1, '2025-01-10', '20:00:00'),
+                                                                                                                                     (12, 'j', 'lk', 'l@l.nl', '5', 'j', 1, '2025-02-11', '20:00:00'),
+                                                                                                                                     (13, 'j', 'b', 'j@j.nl', '2', '2', 1, '2025-01-11', '20:00:00');
 
 -- --------------------------------------------------------
 
@@ -119,10 +125,7 @@ INSERT INTO `weeks` (`week_id`, `day_1`, `day_2`, `day_3`, `day_4`, `day_5`) VAL
 
 CREATE TABLE `week_reservation` (
                                     `week_id` int NOT NULL,
-                                    `reservation_id` int NOT NULL,
-                                    `reservation_date` date NOT NULL,
-                                    `begin_date_week` date NOT NULL,
-                                    `end_date_week` date NOT NULL
+                                    `reservation_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -169,7 +172,7 @@ ALTER TABLE `week_reservation`
 -- AUTO_INCREMENT voor een tabel `reservations`
 --
 ALTER TABLE `reservations`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT voor een tabel `users`
