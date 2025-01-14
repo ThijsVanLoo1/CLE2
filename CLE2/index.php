@@ -31,7 +31,7 @@ if (!empty($_SESSION) === true) {
     <div class="hidden md:flex gap-6 nav-links">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
         <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
-        <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+        <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">

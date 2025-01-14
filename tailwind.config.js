@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["./CLE2/*.php"],
+    content: ["./CLE2/*.{html,js,php}"],
     theme: {
         extend: {
             fontFamily: {

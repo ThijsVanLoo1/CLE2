@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
+    <link href="output.css" rel="stylesheet">
+    <title>Contact</title>
+</head>
+<body class="font-sans">
+<nav class="flex items-center justify-between p-6 bg-[#04588D]">
+    <div>
+        <a href="index.php">
+            <img alt="Logo" class="w-20 h-20"
+                 src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg">
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 nav-links">
+        <a class="text-white hover:text-[#003060]" href="index.php">Home</a>
+        <a class="text-white hover:text-[#003060]" href="reservation.php">Afspraak maken</a>
+        <a class="text-white hover:text-[#003060]" href="<?= $link; ?>"><?= $text; ?></a>
+    </div>
+    <div class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1" id="mobile-menu">
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+    </div>
+</nav>
+
+<header>
+    <h1 class="font-bold mb-8 text-3xl px-16 py-8">Contact</h1>
+    <div class="flex justify-between gap-10 px-16">
+        <div class="w-1/2">
+            <p class="text-2xl">
+                Uiteraard kunt u altijd contact opnemen met onze directeur Rika van Swieten! Kom ook vooral even langs
+                om een stukje van de sfeer te proeven op onze school!
+                    <p>
+                        <br>
+                    </p>
+                    <p class="text-2xl text-[#e94574] font-bold">
+                        Graag tot ziens op IKC de Eendragt!
+                    </p>
+            </p>
+        </div>
+        <div class="w-1/2 flex-1">
+            <p class="text-2xl">
+                <strong>Email</strong>: rikavanswieten@deeendragt.nl<br>
+                <strong>Straat</strong>: Johan Berkstraat 31<br>
+                <strong>Adres</strong>: 3284 XD Zuid-Beijerland
+            </p>
+        </div>
+    </div>
+</header>
+
+<main class="text-2xl p-16">
+    <h1 class="font-bold mb-8">
+        Direct contact opnemen met één van onze faciliteiten?
+    </h1>
+        <p>Kinderdagverblijf</p>
+        <p>06-14426191</p>
+        <p>eendragt@ko-dehoekscheschool.nl</p>
+        <br>
+        <p>Peuterspeelzaal de Beijertjes</p>
+        <p>06-13647922</p>
+        <p>beijertjes@ko-dehoekscheschool.nl</p>
+        <br>
+        <p>BSO</p>
+        <p>06-14745493</p>
+        <p>eendragt@ko-dehoekscheschool.nl</p>
+</main>
+
+<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
+    <div class="flex flex-col items-center py-4">
+        <img class="w-16 h-16" src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg">
+    </div>
+    <div class="flex gap-2 py-4">
+        <img alt="Instagram logo" class="w-10 h-10"
+             src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg">
+        <img alt="Facebook logo" class="w-10 h-10"
+             src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg">
+        <img alt="LinkedIn logo"
+             class="w-10 h-10" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokEYt0yyh6uNDKL8uksVLlhZ35laKNQgZ9g">
+        <img alt="X logo" class="w-10 h-10" src="https://upload.wikimedia.org/wikipedia/commons/b/b7/X_logo.jpg">
+    </div>
+    <ul class="text-white flex flex-col gap-2 font-bold py-4">
+        <li><a href="index.php">Home</a></li>
+        <li><a href="reservation.php">Afspraak maken</a></li>
+        <li><a href="#over">Contact</a></li>
+    </ul>
+</footer>
+</body>
+</html>
