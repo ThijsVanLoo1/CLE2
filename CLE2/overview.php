@@ -4,13 +4,13 @@
 session_start();
 
 //check if user is actually logged in
-if(!isset($_SESSION['user'])) {
+if(!isset($_SESSION['login'])) {
     header('Location: index.php');
     exit();
 }
 
 //check if user is admin
-if($_SESSION['admin_key'] !== null) {
+if($_SESSION['admin_key'] == 1) {
     header('Location: admin.php');
     exit();
 }

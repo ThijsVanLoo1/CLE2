@@ -5,7 +5,7 @@ session_start();
 global $db;
 require_once "includes/database.php";
 
-if ($_SESSION['admin_key'] === null) {
+if ($_SESSION['admin_key'] != 1) {
     header('location: overview.php');
 }
 $query = "SELECT * FROM reservations";

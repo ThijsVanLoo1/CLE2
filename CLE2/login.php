@@ -42,11 +42,12 @@ if(isset($_POST['submit'])) {
 
             // check if password matches in database
             if (password_verify($password, $row['password'])) {
+                $_SESSION['login'] = true;
                 $_SESSION['user'] = $email;
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['admin_key'] = $row['admin_key'];
 
-                if($_SESSION['admin_key'] !== null) {
+                if($_SESSION['admin_key'] == 1) {
                     header('Location: admin.php');
                     exit();
                 } else {
