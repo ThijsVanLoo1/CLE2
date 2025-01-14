@@ -1,5 +1,8 @@
 <?php
 session_start();
+global $db;
+require_once "includes/database.php";
+$docent = $_SESSION['docent_id'];
 $link = "login.php";
 $text = "Login";
 if (!empty($_SESSION) === true) {
@@ -9,6 +12,17 @@ if (!empty($_SESSION) === true) {
     $link = "login.php";
     $text = "Login";
 }
+// Docent id ophalen voor de namen
+$query = "SELECT first_name, last_name FROM users where id= $docent";
+$result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+
+// Array aanmaken voor de docent
+$docent = [];
+
+//
+$row = mysqli_fetch_assoc($result);
+$docent = $row;
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -56,7 +70,8 @@ if (!empty($_SESSION) === true) {
     <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je
         reservatie <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?></h1>
     <p class="text-white text-base">
-        Je hebt een reservatie met docent <?= $_SESSION['docent_id'] ?>. Deze afspraak is op <?= $_SESSION['date'] ?>
+        Je hebt een reservatie met docent <?= $docent['first_name'] ?> <?= $docent['last_name'] ?>. Deze afspraak is
+        op <?= $_SESSION['date'] ?>
         om <?= $_SESSION['time_slot'] ?>. De afspraak staat geregistreerd onder de
         naam <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?>. Vergeet niet om
         eventuele vragen of onderwerpen die je wilt bespreken voor te bereiden, zodat je het meeste uit je afspraak kunt
