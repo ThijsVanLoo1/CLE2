@@ -28,7 +28,7 @@ if (!empty($_SESSION) === true) {
                  class="w-20 h-20">
         </a>
     </div>
-    <div class="hidden md:flex gap-6 nav-links">
+    <div class="hidden md:flex gap-6 nav-links p-8">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
         <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
         <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
