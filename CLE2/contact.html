@@ -30,22 +30,22 @@
 </nav>
 
 <header>
-    <h1 class="font-bold mb-8 text-3xl px-16 py-8">Contact</h1>
-    <div class="flex justify-between gap-10 px-16">
-        <div class="w-1/2">
-            <p class="text-2xl">
+    <h1 class="font-bold mb-8 text-3xl px-16 py-8 max-lg:text-xl max-lg:px-4 max-lg:py-3 max-lg:mb-0 max-lg:mt-4">Contact</h1>
+    <div class="flex justify-between gap-10 px-16 max-lg:px-4 max-lg:flex-col">
+        <div class="w-1/2 max-lg:w-auto">
+            <p class="text-2xl max-lg:text-base">
                 Uiteraard kunt u altijd contact opnemen met onze directeur Rika van Swieten! Kom ook vooral even langs
                 om een stukje van de sfeer te proeven op onze school!
                     <p>
                         <br>
                     </p>
-                    <p class="text-2xl text-[#e94574] font-bold">
+                    <p class="text-2xl text-[#e94574] font-bold max-lg:text-base">
                         Graag tot ziens op IKC de Eendragt!
                     </p>
             </p>
         </div>
         <div class="w-1/2 flex-1">
-            <p class="text-2xl">
+            <p class="text-2xl max-lg:text-base">
                 <strong>Email</strong>: rikavanswieten@deeendragt.nl<br>
                 <strong>Straat</strong>: Johan Berkstraat 31<br>
                 <strong>Adres</strong>: 3284 XD Zuid-Beijerland
@@ -54,8 +54,8 @@
     </div>
 </header>
 
-<main class="text-2xl p-16">
-    <h1 class="font-bold mb-8">
+<main class="text-2xl p-16 max-lg:text-base max-lg:p-4">
+    <h1 class="font-bold mb-8 max-lg:text-base">
         Direct contact opnemen met één van onze faciliteiten?
     </h1>
         <p>Kinderdagverblijf</p>
@@ -91,4 +91,14 @@
     </ul>
 </footer>
 </body>
+<script>
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
+    });
+</script>
 </html>

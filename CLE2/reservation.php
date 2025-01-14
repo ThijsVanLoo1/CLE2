@@ -2,23 +2,6 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 
-if (isset($_POST['week_id'])) {
-    $weekId = mysqli_real_escape_string($db, $_POST['week_id']);
-
-    $query = "SELECT day_1, day_2, day_3, day_4, day_5 FROM weeks WHERE week_id = '$weekId'";
-    $result = mysqli_query($db, $query);
-
-    $days = [];
-    if ($row = mysqli_fetch_assoc($result)) {
-        // Add all days into the $days array
-        $days[] = ['day' => $row['day_1']];
-        $days[] = ['day' => $row['day_2']];
-        $days[] = ['day' => $row['day_3']];
-        $days[] = ['day' => $row['day_4']];
-        $days[] = ['day' => $row['day_5']];
-    }
-}
-
 $first_name = "";
 $last_name = "";
 $email = "";
@@ -102,10 +85,6 @@ if (isset($_POST['submit'])) {
         function showDays() {
             const weeks = document.getElementById('weeks').value;
             const daysContainer = document.getElementById('days-container');
-            const dayList = document.getElementById('days');
-
-            dayList.innerHTML = '<option value="" disabled selected>Selecteer een dag.</option>';
-            daysContainer.style.display = 'none';
             //Als de week is geselecteerd verander de display naar block om het zichtbaar te maken.
             if (weeks) {
                 daysContainer.style.display = 'block';
