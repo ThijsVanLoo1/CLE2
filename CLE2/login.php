@@ -117,6 +117,15 @@ if(isset($_POST['submit'])) {
     </form>
     </div>
 </main>
-
+<script>
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
+    });
+</script>
 </body>
 </html>
