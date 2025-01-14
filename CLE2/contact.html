@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
+    <link href="output.css" rel="stylesheet">
+    <title>Contact</title>
+</head>
+<body class="font-sans">
+<nav class="flex items-center justify-between p-6 bg-[#04588D]">
+    <div>
+        <a href="index.php">
+            <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" alt="Logo"
+                 class="w-20 h-20">
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 nav-links">
+        <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
+        <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+    </div>
+    <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+    </div>
+</nav>
+
+<header class="flex justify-center">
+    <div class="w-1/2">
+    <p class="text-2xl">
+        Uiteraard kunt u altijd contact opnemen met onze directeur Rika van Swieten! Kom ook vooral even langs
+        om een stukje van de sfeer te proeven op onze school!
+        <br>
+        Graag tot ziens op IKC de Eendragt!
+    </p>
+    </div>
+    <div class="w-1/2">
+    <p class="text-2xl">
+        Email:
+    </p>
+    </div>
+</header>
+
+<main>
+
+</main>
+
+<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
+    <div class="flex flex-col items-center py-4">
+        <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
+    </div>
+    <div class="flex gap-2 py-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram logo"
+             class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook logo"
+             class="w-10 h-10">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokEYt0yyh6uNDKL8uksVLlhZ35laKNQgZ9g"
+             alt="LinkedIn logo" class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/X_logo.jpg" alt="X logo" class="w-10 h-10">
+    </div>
+    <ul class="text-white flex flex-col gap-2 font-bold py-4">
+        <li><a href="index.php">Home</a></li>
+        <li><a href="reservation.php">Afspraak maken</a></li>
+        <li><a href="#over">Contact</a></li>
+    </ul>
+</footer>
+</body>
+</html>
