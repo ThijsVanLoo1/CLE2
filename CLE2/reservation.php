@@ -6,6 +6,7 @@ $query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
+//Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $weekData[$row['week_id']] = [
@@ -23,7 +24,8 @@ $email = "";
 $phone_number = "";
 $comment = "";
 $date = "";
-$time_slot = "";
+$start_time = "";
+$end_time = "";
 $error = "";
 
 $query = "SELECT id, first_name, last_name FROM users";
@@ -35,19 +37,20 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 $current_user_id = $_POST['user_id'] ?? $user_id ?? "";
 
-$times = [];
+//Genereer de tijden.
 $time = strtotime('12:30');
-$addTime = 10;
+$endTime = strtotime('20:00');
+$addTime = 10; // in minutes
+$times = [];
 
-while ($time <= strtotime('20:00')) {
-
+while ($time <= $endTime) {
     $times[] = date('H:i', $time);
-
     $time += 60 * $addTime;
 }
 
 $availableTimes = [];
 
+//Wanneer er wordt gedrukt op submit.
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -55,8 +58,9 @@ if (isset($_POST['submit'])) {
     $phone_number = $_POST['phone_number'];
     $comment = $_POST['comment'];
     $date = $_POST['days'];
-    $time_slot = $_POST['times'];
+    $start_time = $_POST['times'];
     $user_id = $_POST['user_id'];
+    $end_time = date('H:i:s', strtotime($start_time) + 10 * 60);
 
     $errors = [];
 
@@ -82,26 +86,29 @@ if (isset($_POST['submit'])) {
         $last_name = mysqli_real_escape_string($db, $last_name);
         $email = mysqli_real_escape_string($db, $email);
         $phone_number = mysqli_real_escape_string($db, $phone_number);
-        $time_slot = mysqli_real_escape_string($db, $time_slot);
+        $start_time = mysqli_real_escape_string($db, $start_time);
+        $end_time = mysqli_escape_string($db, $end_time);
         $date = mysqli_real_escape_string($db, $date);
         $user_id = mysqli_real_escape_string($db, $user_id);
         $comment = mysqli_real_escape_string($db, $comment);
         $_SESSION['first_name'] = $first_name;
         $_SESSION['last_name'] = $last_name;
         $_SESSION['email'] = $email;
-        $_SESSION['phone_number'] = $first_name;
-        $_SESSION['time_slot'] = $first_name;
+        $_SESSION['phone_number'] = $phone_number;
+        $_SESSION['start_time'] = $start_time;
+        $_SESSION['end_time'] = $end_time;
         $_SESSION['date'] = $date;
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date')";
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$start_time', '$end_time')";
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         header('Location: confirmation.php');
-        mysqli_close($db);
-        exit;
     }
+
+    mysqli_close($db);
+    exit;
 }
 ?>
 <!doctype html>
@@ -117,11 +124,14 @@ if (isset($_POST['submit'])) {
     <title>Reservatie pagina</title>
     <script>
 
+        //Variabelen voor JS.
+
         const weekData = <?= json_encode($weekData); ?>;
-        const availableTimes = <?= json_encode($times); ?>;
+        const availableTimes = <?= json_encode($availableTimes); ?>;
 
     </script>
     <script>
+
 
         //Functie om de dagen select op te roepen.
         function showDays() {
@@ -146,38 +156,69 @@ if (isset($_POST['submit'])) {
                 });
                 daysContainer.style.display = 'block'; // Laat de lijst zien.
             }
+
         }
 
-        //Funcitie om een display te maken met alle beschikbare tijden.
-        function timeSelect() {
+        //Gebruikt Fetch om alle beschikbaren tijden te pakken.
+        function fetchAvailableTimes() {
+
             const selectedDay = document.getElementById('days').value;
-            const timeContainer = document.getElementById('time-container');
 
-            timeContainer.innerHTML = '';
+            if (!selectedDay) {
+                return; // Doe niks als geen dag gekozen is.
+            }
 
-            // Maak een label.
-            const label = document.createElement('label');
-            label.setAttribute('for', 'times');
-            label.textContent = `Selecteer Tijd voor ${selectedDay}`;
+            //Maak de form data.
+            const formData = new FormData();
+            formData.append('date', selectedDay);
 
-            // Maak een select aan.
-            const select = document.createElement('select');
-            select.setAttribute('id', 'times');
-            select.setAttribute('name', 'times');
-            select.setAttribute('onchange', 'showData()');
-            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
+            // Gebruik AJAX om een fetch request te doen.
+            fetch('fetch.php', {
+                method: 'POST',
+                body: formData
+            })
+                //Als de fetch lukt ga door met het maken van de form.
+                .then(response => response.json())
+                .then(data => {
+                    const timeContainer = document.getElementById('time-container');
+                    timeContainer.innerHTML = ''; // Clear the previous times
 
-            // Voeg alle tijden toe.
-            availableTimes.forEach(time => {
-                const option = document.createElement('option');
-                option.setAttribute('value', time);
-                option.textContent = time;
-                select.appendChild(option);
-            });
+                    //Maak de form.
+                    if (data && data.length > 0) {
+                        const label = document.createElement('label');
+                        label.setAttribute('for', 'times');
+                        label.textContent = `Selecteer Tijd voor ${selectedDay}`;
 
-            timeContainer.appendChild(label);
-            timeContainer.appendChild(select);
+                        const select = document.createElement('select');
+                        select.setAttribute('id', 'times');
+                        select.setAttribute('name', 'times');
+                        select.setAttribute('onchange', 'showData()');
+                        select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
+
+                        // Add available times as options
+                        data.forEach(time => {
+                            const option = document.createElement('option');
+                            option.setAttribute('value', time);
+                            option.textContent = time;
+                            select.appendChild(option);
+                        });
+
+                        timeContainer.appendChild(label);
+                        timeContainer.appendChild(select);
+                    } else {
+                        // Geef een bericht door als er geen tijden beschikbaar zijn.
+                        timeContainer.innerHTML = 'Geen beschikbare tijden voor deze dag.';
+                    }
+                })
+                //Error check.
+                .catch(error => {
+                    console.error('Error fetching available times:', error);
+                });
         }
+
+        // Roep de functie op zodra de dag is gekozen.
+        document.getElementById('days').addEventListener('change', fetchAvailableTimes);
+
 
         //Funcitie die alle andere gegevens laat zien.
         function showData() {
@@ -219,67 +260,69 @@ if (isset($_POST['submit'])) {
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<main class="flex-grow flex justify-center">
-    <form class="flex flex-col justify-between gap-2" method="post" action="">
-        <label for="weeks"></label>
-        <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
-            <option value="" disabled selected>Selecteer een week.</option>
-            <?php foreach ($weekData as $weekId => $days): ?>
-                <option value="<?= htmlspecialchars($weekId); ?>">
-                    Week <?= htmlspecialchars($weekId); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <div id="days-container" style="display: none;">
-            <label for="days"></label>
-            <select id="days" name="days" class="border-2 border-black rounded p-6" onchange="timeSelect()">
-                <option value="" disabled selected>Selecteer een dag.</option>
-            </select>
-        </div>
-
-        <div id="time-container"></div>
-        <div id="data-container" class="flex flex-col gap-4" style="display: none;">
-            <label for="first_name">Voornaam</label>
-            <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
-            <p class="font-bold text-red-600 text-xl">
-                <?= ($errors['emptyFirstName']) ?? '' ?>
-            </p>
-            <label for="last_name">Achternaam</label>
-            <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
-            <p class="font-bold text-red-600 text-xl">
-                <?= ($errors['emptyLastName']) ?? '' ?>
-            </p>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
-            <p class="font-bold text-red-600 text-xl">
-                <?= ($errors['emptyEmail']) ?? '' ?>
-            </p>
-            <label for="user_id">Docent</label>
-            <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
-                <option value="">Selecteer een docent</option>
-                <?php foreach ($docenten as $docent): ?>
-                    <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
+<div class="h-screen">
+    <main class="flex-grow flex justify-center">
+        <form class="flex flex-col justify-between gap-2" method="post" action="">
+            <label for="weeks"></label>
+            <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
+                <option value="" disabled selected>Selecteer een week.</option>
+                <?php foreach ($weekData as $weekId => $days): ?>
+                    <option value="<?= htmlspecialchars($weekId); ?>">
+                        Week <?= htmlspecialchars($weekId); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <label for="phone_number">Telefoon Nummer</label>
-            <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
-            <p class="font-bold text-red-600 text-xl">
-                <?= ($errors['emptyPhoneNumber']) ?? '' ?>
-            </p>
-            <label for="comment">Comment</label>
-            <textarea rows="5" cols="3" type="text" id="comment" name="comment"
-                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
-        </div>
-        <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
-    </form>
-</main>
-</body>
+            <div id="days-container" style="display: none;">
+                <label for="days"></label>
+                <select id="days" name="days" class="border-2 border-black rounded p-6"
+                        onchange="fetchAvailableTimes()">
+                    <option value="" disabled selected>Selecteer een dag.</option>
+                </select>
+            </div>
+
+            <div id="time-container"></div>
+            <div id="data-container" class="flex flex-col gap-4" style="display: none;">
+                <label for="first_name">Voornaam</label>
+                <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
+                       value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
+                <p class="font-bold text-red-600 text-xl">
+                    <?= ($errors['emptyFirstName']) ?? '' ?>
+                </p>
+                <label for="last_name">Achternaam</label>
+                <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
+                       value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
+                <p class="font-bold text-red-600 text-xl">
+                    <?= ($errors['emptyLastName']) ?? '' ?>
+                </p>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
+                       value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
+                <p class="font-bold text-red-600 text-xl">
+                    <?= ($errors['emptyEmail']) ?? '' ?>
+                </p>
+                <label for="user_id">Docent</label>
+                <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
+                    <option value="">Selecteer een docent</option>
+                    <?php foreach ($docenten as $docent): ?>
+                        <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <label for="phone_number">Telefoon Nummer</label>
+                <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
+                       value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
+                <p class="font-bold text-red-600 text-xl">
+                    <?= ($errors['emptyPhoneNumber']) ?? '' ?>
+                </p>
+                <label for="comment">Comment</label>
+                <textarea rows="5" cols="3" type="text" id="comment" name="comment"
+                          class="border-2 border-black rounded p-4"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
+            </div>
+            <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+        </form>
+    </main>
+</div>
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] sticky bottom-0">
     <div class="flex flex-col items-center py-4">
         <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
@@ -299,6 +342,7 @@ if (isset($_POST['submit'])) {
         <li><a href="#over">Contact</a></li>
     </ul>
 </footer>
+</body>
 <script>
     // Hamburger menu
     const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
