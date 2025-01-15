@@ -17,7 +17,6 @@ if($_SESSION['admin_key'] == 1) {
 
 //gives user correct id
 $id = $_SESSION['id'];
-print_r($_SESSION['id']);
 
 //get data from database
 global $db;
@@ -34,7 +33,6 @@ $reservations = [];
 while($row = mysqli_fetch_assoc($result)) {
     $reservations[] = $row;
 }
-
 
 //Get the current week from the GET or default to 0 (current week)
 $selectedWeek = $_GET['week'] ?? 0;
@@ -56,6 +54,13 @@ $rosterTimes = getRosterTimes();
 
 //The events from the database that are in this week
 $events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
+
+
+$link = "logout.php";
+$text = "Logout";
+$link_login = "overview.php";
+$text_overview = "Overview";
+$hidden = "hidden";
 ?>
 
 <!doctype html>
@@ -83,10 +88,10 @@ $events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
         </div>
         <div class="hidden md:flex gap-6 nav-links p-8">
             <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-            <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
+            <a href="reservation.php" class="text-white hover:text-[#003060] <?=$hidden?>">Afspraak maken</a>
             <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
-            <a href="logout.php" class="text-white hover:text-[#003060]">Logout</a>
-
+            <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+            <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060]"><?= $text_overview; ?></a>
         </div>
         <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
             <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -94,6 +99,21 @@ $events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
             <span class="w-8 h-1 bg-white rounded transition-all"></span>
         </div>
     </nav>
+
+    <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+        <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+        <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b <?=$hidden?>">Afspraak maken</a>
+        <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+        <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+        <a href="<?= $link_login; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text_overview; ?></a>
+    </div>
+    <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+        <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+        <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
+        <a href="" class="hover:text-[#003060] block ">Contact</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
+        <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060] block"><?= $text_overview; ?></a>
+    </div>
     <main>
         <div class="container">
             <div class="title">
@@ -122,10 +142,29 @@ $events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
                     <div class="row row-roster-<?= $index + 1; ?>"></div>
                 <?php } ?>
                 <?php foreach ($events as $event) { ?>
-                    <a href="" class="event event-item-<?= $event['id']; ?>"><?= $event['first_name'] ." ".$event['last_name']; ?></a>
+                    <a href="details.php?id=<?= $event['id'] ?>" class="event event-item-<?= $event['id']; ?>"><?= $event['first_name'] ." ".$event['last_name']; ?></a>
                 <?php } ?>
             </div>
         </div>
     </main>
     </body>
+<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] mt-4">
+    <div class="flex flex-col items-center py-4">
+        <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
+    </div>
+    <div class="flex gap-2 py-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram logo"
+             class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook logo"
+             class="w-10 h-10">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokEYt0yyh6uNDKL8uksVLlhZ35laKNQgZ9g"
+             alt="LinkedIn logo" class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/X_logo.jpg" alt="X logo" class="w-10 h-10">
+    </div>
+    <ul class="text-white flex flex-col gap-2 font-bold py-4">
+        <li><a href="index.php">Home</a></li>
+        <li><a href="reservation.php" class="<?=$hidden?>">Afspraak maken</a></li>
+        <li><a href="#over">Contact</a></li>
+    </ul>
+</footer>
 </html>

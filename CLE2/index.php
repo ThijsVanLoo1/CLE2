@@ -2,9 +2,15 @@
 session_start();
 $link = "login.php";
 $text = "Login";
+$link_login = "";
+$text_overview = "";
+$hidden = "";
 if (!empty($_SESSION) === true) {
     $link = "logout.php";
     $text = "Logout";
+    $link_login = "overview.php";
+    $text_overview = "Overview";
+    $hidden = "hidden";
 } else {
     $link = "login.php";
     $text = "Login";
@@ -30,9 +36,10 @@ if (!empty($_SESSION) === true) {
     </div>
     <div class="hidden md:flex gap-6 nav-links p-8">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
+        <a href="reservation.php" class="text-white hover:text-[#003060] <?=$hidden?>">Afspraak maken</a>
         <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+        <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060]"><?= $text_overview; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -43,14 +50,16 @@ if (!empty($_SESSION) === true) {
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
+    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b <?=$hidden?>">Afspraak maken</a>
     <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+    <a href="<?= $link_login; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text_overview; ?></a>
     <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
     <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
     <a href="" class="hover:text-[#003060] block ">Contact</a>
+    <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060] block"><?= $text_overview; ?></a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
 </div>
 <header class="sm:flex">
@@ -84,7 +93,7 @@ if (!empty($_SESSION) === true) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
+        <li><a href="reservation.php" class="<?=$hidden?>">Afspraak maken</a></li>
         <li><a href="#over">Contact</a></li>
     </ul>
 </footer>
