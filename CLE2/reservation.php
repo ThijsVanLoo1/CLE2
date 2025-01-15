@@ -2,21 +2,19 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 
-if (isset($_POST['week_id'])) {
-    $weekId = mysqli_real_escape_string($db, $_POST['week_id']);
+$query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$result = mysqli_query($db, $query)
+or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
-    $query = "SELECT day_1, day_2, day_3, day_4, day_5 FROM weeks WHERE week_id = '$weekId'";
-    $result = mysqli_query($db, $query);
-
-    $days = [];
-    if ($row = mysqli_fetch_assoc($result)) {
-        // Add all days into the $days array
-        $days[] = ['day' => $row['day_1']];
-        $days[] = ['day' => $row['day_2']];
-        $days[] = ['day' => $row['day_3']];
-        $days[] = ['day' => $row['day_4']];
-        $days[] = ['day' => $row['day_5']];
-    }
+$weekData = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $weekData[$row['week_id']] = [
+        $row['day_1'],
+        $row['day_2'],
+        $row['day_3'],
+        $row['day_4'],
+        $row['day_5']
+    ];
 }
 
 $first_name = "";
@@ -27,6 +25,15 @@ $comment = "";
 $date = "";
 $time_slot = "";
 $error = "";
+
+$query = "SELECT id, first_name, last_name FROM users";
+$result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);
+$docenten = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $docenten[] = $row;
+}
+
+$current_user_id = $_POST['user_id'] ?? $user_id ?? "";
 
 $times = [];
 $time = strtotime('12:30');
@@ -49,6 +56,7 @@ if (isset($_POST['submit'])) {
     $comment = $_POST['comment'];
     $date = $_POST['days'];
     $time_slot = $_POST['times'];
+    $user_id = $_POST['user_id'];
 
     $errors = [];
 
@@ -76,8 +84,10 @@ if (isset($_POST['submit'])) {
         $phone_number = mysqli_real_escape_string($db, $phone_number);
         $time_slot = mysqli_real_escape_string($db, $time_slot);
         $date = mysqli_real_escape_string($db, $date);
+        $user_id = mysqli_real_escape_string($db, $user_id);
+        $comment = mysqli_real_escape_string($db, $comment);
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$date', '$time_slot')";
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$time_slot')";
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         header('Location: confirmation.php');
@@ -98,17 +108,35 @@ if (isset($_POST['submit'])) {
     <link href="output.css" rel="stylesheet">
     <title>Reservatie pagina</title>
     <script>
+
+        const weekData = <?= json_encode($weekData); ?>;
+        const availableTimes = <?= json_encode($times); ?>;
+
+    </script>
+    <script>
+
         //Functie om de dagen select op te roepen.
         function showDays() {
-            const weeks = document.getElementById('weeks').value;
+            const weekId = document.getElementById('weeks').value; // Correctly get the selected week ID
             const daysContainer = document.getElementById('days-container');
             const dayList = document.getElementById('days');
 
+            // Maak de lijst leeg.
             dayList.innerHTML = '<option value="" disabled selected>Selecteer een dag.</option>';
             daysContainer.style.display = 'none';
-            //Als de week is geselecteerd verander de display naar block om het zichtbaar te maken.
-            if (weeks) {
-                daysContainer.style.display = 'block';
+
+            // Vul de lijst in.
+            if (weekId && weekData[weekId]) {
+                const days = weekData[weekId];
+                days.forEach(day => {
+                    if (day) { // Sla lege dagen over.
+                        const option = document.createElement('option');
+                        option.value = day;
+                        option.textContent = day;
+                        dayList.appendChild(option);
+                    }
+                });
+                daysContainer.style.display = 'block'; // Laat de lijst zien.
             }
         }
 
@@ -119,22 +147,20 @@ if (isset($_POST['submit'])) {
 
             timeContainer.innerHTML = '';
 
-            //Maak een label voor de tijd select.
+            // Maak een label.
             const label = document.createElement('label');
             label.setAttribute('for', 'times');
             label.textContent = `Selecteer Tijd voor ${selectedDay}`;
 
-            //Maak een form met bijbehorende gegevens.
+            // Maak een select aan.
             const select = document.createElement('select');
             select.setAttribute('id', 'times');
             select.setAttribute('name', 'times');
             select.setAttribute('onchange', 'showData()');
-            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded')
+            select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
 
-            //Lijst met tijd. Moet nog worden aangepast om met PHP te werken.
-            const times = ["12:30", "20:00"];
-            //Voor elke tijd maak een optie.
-            times.forEach(time => {
+            // Voeg alle tijden toe.
+            availableTimes.forEach(time => {
                 const option = document.createElement('option');
                 option.setAttribute('value', time);
                 option.textContent = time;
@@ -157,36 +183,49 @@ if (isset($_POST['submit'])) {
     </script>
 </head>
 
-<nav class="text-center bg-cyan-900 font-poppins p-6">
-    <a href="login.php">Login</a>
-    <a href="logout.php">Logout</a>
-    <a href="register.php">Register</a>
-    <a href="admin.php">Admin</a>
-    <a href="overview.php">Overview</a>
-    <a href="confirmation.php">Confirmation</a>
+<nav class="flex items-center justify-between p-6 bg-[#04588D]">
+    <div>
+        <a href="index.php">
+            <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" alt="Logo"
+                 class="w-20 h-20">
+        </a>
+    </div>
+    <div class="hidden md:flex gap-6 nav-links">
+        <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
+        <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+    </div>
+    <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        <span class="w-8 h-1 bg-white rounded transition-all"></span>
+    </div>
 </nav>
+<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+</div>
+<div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+    <a href="" class="hover:text-[#003060] block ">Contact</a>
+</div>
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
-<body>
-<div class="flex justify-center">
+<body class="min-h-screen flex flex-col">
+<main class="flex-grow flex justify-center">
     <form class="flex flex-col justify-between gap-2" method="post" action="">
         <label for="weeks"></label>
         <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
             <option value="" disabled selected>Selecteer een week.</option>
-            <option value="week1">Week 1</option>
-            <option value="week2">Week 2</option>
-            <option value="week3">Week 3</option>
-            <option value="week4">Week 4</option>
+            <?php foreach ($weekData as $weekId => $days): ?>
+                <option value="<?= htmlspecialchars($weekId); ?>">
+                    Week <?= htmlspecialchars($weekId); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
         <div id="days-container" style="display: none;">
             <label for="days"></label>
             <select id="days" name="days" class="border-2 border-black rounded p-6" onchange="timeSelect()">
                 <option value="" disabled selected>Selecteer een dag.</option>
-                <option value="Maandag">Ma</option>
-                <option value="Dinsdag">Di</option>
-                <option value="Woensdag">Wo</option>
-                <option value="Donderdag">Do</option>
-                <option value="Vrijdag">Vr</option>
             </select>
         </div>
 
@@ -194,22 +233,73 @@ if (isset($_POST['submit'])) {
         <div id="data-container" class="flex flex-col gap-4" style="display: none;">
             <label for="first_name">Voornaam</label>
             <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($first_name) ?>">
+                   value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
+            <p class="font-bold text-red-600 text-xl">
+                <?= ($errors['emptyFirstName']) ?? '' ?>
+            </p>
             <label for="last_name">Achternaam</label>
             <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($last_name) ?>">
+                   value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
+            <p class="font-bold text-red-600 text-xl">
+                <?= ($errors['emptyLastName']) ?? '' ?>
+            </p>
             <label for="email">Email</label>
             <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($email) ?>">
+                   value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
+            <p class="font-bold text-red-600 text-xl">
+                <?= ($errors['emptyEmail']) ?? '' ?>
+            </p>
+            <label for="user_id">Docent</label>
+            <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
+                <option value="">Selecteer een docent</option>
+                <?php foreach ($docenten as $docent): ?>
+                    <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
             <label for="phone_number">Telefoon Nummer</label>
             <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
-                   value="<?= htmlspecialchars($phone_number) ?>">
+                   value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
+            <p class="font-bold text-red-600 text-xl">
+                <?= ($errors['emptyPhoneNumber']) ?? '' ?>
+            </p>
             <label for="comment">Comment</label>
             <textarea rows="5" cols="3" type="text" id="comment" name="comment"
-                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($comment) ?></textarea>
+                      class="border-2 border-black rounded p-4"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
         </div>
         <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
     </form>
-</div>
+</main>
 </body>
+<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] sticky bottom-0">
+    <div class="flex flex-col items-center py-4">
+        <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
+    </div>
+    <div class="flex gap-2 py-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram logo"
+             class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook logo"
+             class="w-10 h-10">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRokEYt0yyh6uNDKL8uksVLlhZ35laKNQgZ9g"
+             alt="LinkedIn logo" class="w-10 h-10">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/X_logo.jpg" alt="X logo" class="w-10 h-10">
+    </div>
+    <ul class="text-white flex flex-col gap-2 font-bold py-4">
+        <li><a href="index.php">Home</a></li>
+        <li><a href="reservation.php">Afspraak maken</a></li>
+        <li><a href="#over">Contact</a></li>
+    </ul>
+</footer>
+<script>
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+
+    // als je op het hamburger menu klikt
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
+    });
+</script>
 </html>
