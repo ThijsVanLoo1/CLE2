@@ -17,6 +17,7 @@ if($_SESSION['admin_key'] == 1) {
 
 //gives user correct id
 $id = $_SESSION['id'];
+print_r($_SESSION['id']);
 
 //get data from database
 global $db;
@@ -54,8 +55,7 @@ $yearOfWeek = date('Y', $weekDays[0]['timestamp']);
 $rosterTimes = getRosterTimes();
 
 //The events from the database that are in this week
-$events = getEvents($weekDays[0]['fullDate'], $weekDays[6]['fullDate']);
-print_r($events);
+$events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
 ?>
 
 <!doctype html>
@@ -72,7 +72,29 @@ print_r($events);
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <style><?= getDynamicCSS($rosterTimes, $events); ?></style>
     <title>Docent - Overzicht</title>
+</head>
     <body>
+    <nav class="flex items-center justify-between p-6 bg-[#04588D]">
+        <div>
+            <a href="index.php">
+                <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" alt="Logo"
+                     class="w-20 h-20">
+            </a>
+        </div>
+        <div class="hidden md:flex gap-6 nav-links p-8">
+            <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
+            <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
+            <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
+            <a href="logout.php" class="text-white hover:text-[#003060]">Logout</a>
+
+        </div>
+        <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
+            <span class="w-8 h-1 bg-white rounded transition-all"></span>
+            <span class="w-8 h-1 bg-white rounded transition-all"></span>
+            <span class="w-8 h-1 bg-white rounded transition-all"></span>
+        </div>
+    </nav>
+    <main>
         <div class="container">
             <div class="title">
                 <a href="?week=<?= $selectedWeek - 1 ?>">Vorige week</a>
@@ -95,8 +117,6 @@ print_r($events);
                 <div class="col wednesday"></div>
                 <div class="col thursday"></div>
                 <div class="col friday"></div>
-                <div class="col weekend saturday"></div>
-                <div class="col weekend sunday"></div>
                 <?php foreach ($rosterTimes as $index => $rosterTime) { ?>
                     <div class="time row-roster-<?= $index + 1; ?>"><?= $rosterTime; ?></div>
                     <div class="row row-roster-<?= $index + 1; ?>"></div>
@@ -106,4 +126,6 @@ print_r($events);
                 <?php } ?>
             </div>
         </div>
+    </main>
     </body>
+</html>
