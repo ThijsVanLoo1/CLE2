@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The actual times for our calendar view
  *
@@ -7,7 +6,7 @@
  */
 function getRosterTimes(): array
 {
-    return ['12:30', '12:40', '12:50', '13:00', '13:10', '13:20', '13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30', '14:40', '14:50', '15:00', '15:10', '15:20', '15:30', '15:40', '15:50', '16:00', '16:10', '16:20', '16:30', '16:40', '16:50', '17:00'];
+    return ['12:30', '12:40', '12:50','13:00' , '13:10', '13:20','13:30', '13:40', '13:50','14:00', '14:10', '14:20', '14:30', '14:40', '14:50', '15:00','15:10', '15:20', '15:30', '15:40', '15:50', '16:00','16:10', '16:20', '16:30', '16:40', '16:50', '17:00','17:10', '17:20', '17:30', '17:40', '17:50','18:00', '18:10', '18:20', '18:30', '18:40', '18:50', '19:00','19:10', '19:20', '19:30', '19:40', '19:50', '20:00','20:10', '20:20', '20:30', '20:40'];
 }
 
 /**
@@ -22,9 +21,9 @@ function getWeekDays(int $timestamp): array
     $start = date('w', $timestamp) == 1 ? $timestamp : strtotime('last monday', $timestamp);
     $startDate = date('Y-m-d', $start);
 
-    //Loop till 7 to build the days of the week
+    //Loop till 5 to build the days of the week
     $dates = [];
-    for ($i = 0; $i < 7; $i++) {
+    for ($i = 0; $i < 5; $i++) {
         $dayTimestamp = strtotime($startDate . "+$i days");
         //Build array keys that are relevant to use when someone calls this function
         $dates[] = [
@@ -52,7 +51,7 @@ function formatEvent(array $event): array
 
     //Add the day of the week (translated from the default weird start on Sunday)
     $dayNumber = (int)date('w', strtotime($event['date']));
-    $event['day_number'] = $dayNumber === 0 ? 7 : $dayNumber;
+    $event['day_number'] = $dayNumber === 0 ? 5 : $dayNumber;
 
     //Get the times and translate the event times to the rows in the grid
     $rosterItems = getRosterTimes();
@@ -74,8 +73,10 @@ function getEvents(string $from, string $to): array
     global $db;
     require_once "database.php";
 
+    $id = $_SESSION['id'];
+
     //Get the result set from the database with an SQL query
-    $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to'";
+    $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $id";
     $result = mysqli_query($db, $query);
 
     //Loop through the result to create a custom array of events
@@ -89,6 +90,7 @@ function getEvents(string $from, string $to): array
 
     return $events;
 }
+
 
 /**
  * To prevent too much clutter of PHP-in-CSS within index.php, we'll use this function
