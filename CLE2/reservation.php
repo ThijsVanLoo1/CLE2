@@ -1,7 +1,7 @@
 <?php
 /** @var mysqli $db */
 require_once "includes/database.php";
-
+session_start();
 $query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
@@ -86,6 +86,14 @@ if (isset($_POST['submit'])) {
         $date = mysqli_real_escape_string($db, $date);
         $user_id = mysqli_real_escape_string($db, $user_id);
         $comment = mysqli_real_escape_string($db, $comment);
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['last_name'] = $last_name;
+        $_SESSION['email'] = $email;
+        $_SESSION['phone_number'] = $first_name;
+        $_SESSION['time_slot'] = $first_name;
+        $_SESSION['date'] = $date;
+        $_SESSION['docent_id'] = $user_id;
+        $_SESSION['comment'] = $comment;
 
         $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `time_slot`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$time_slot')";
         $result = mysqli_query($db, $query)
