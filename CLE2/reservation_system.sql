@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 14 jan 2025 om 08:49
+-- Gegenereerd op: 15 jan 2025 om 09:03
 -- Serverversie: 8.4.2
--- PHP-versie: 8.3.15
+-- PHP-versie: 8.3.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,27 +36,22 @@ CREATE TABLE `reservations` (
                                 `comment` varchar(1000) NOT NULL,
                                 `user_id` int NOT NULL,
                                 `date` date NOT NULL,
-                                `time_slot` time NOT NULL
+                                `start_time` time NOT NULL,
+                                `end_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `reservations`
 --
 
-INSERT INTO `reservations` (`id`, `first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `time_slot`) VALUES
-                                                                                                                                     (1, 'Henk', 'Worst', 'henk@worst.nl', '0812456359', 'henk', 4, '2025-04-01', '14:45:00'),
-                                                                                                                                     (2, 'Henk', 'Worst', 'henk@worst.nl', '0812456359', 'henk', 1, '2025-04-01', '14:45:00'),
-                                                                                                                                     (3, 'Pete', 'Worst', 'Pete@worst.nl', '0812456358', 'Pete', 4, '2025-04-01', '15:00:00'),
-                                                                                                                                     (4, 'j', 'j', 'j@j.nl', '08133333', 'j', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (5, 'j', 'b', 'j@j.nl', '081222222', 'j', 1, '2025-02-11', '20:00:00'),
-                                                                                                                                     (6, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (7, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (8, 'Chayenne', 'Rademaker', 'chayenneisabela@gmail.com', '112', 'pelippers zijn lief', 1, '2025-02-12', '20:00:00'),
-                                                                                                                                     (9, 'j', 'j', 'jordi1030@outlook.com', '6', '2', 4, '2025-02-10', '20:00:00'),
-                                                                                                                                     (10, 'j', 'b', 'L@l.nl', '5646588', 'henk', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (11, 'j', 'b', 'j@j.nl', '5', 'j', 1, '2025-01-10', '20:00:00'),
-                                                                                                                                     (12, 'j', 'lk', 'l@l.nl', '5', 'j', 1, '2025-02-11', '20:00:00'),
-                                                                                                                                     (13, 'j', 'b', 'j@j.nl', '2', '2', 1, '2025-01-11', '20:00:00');
+INSERT INTO `reservations` (`id`, `first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES
+                                                                                                                                                  (1, 'Henk', 'Worst', 'henk@worst.nl', '0812456359', 'henk', 4, '2025-04-01', '14:45:00', '14:55:00'),
+                                                                                                                                                  (2, 'Henk', 'Worst', 'henk@worst.nl', '0812456359', 'henk', 1, '2025-04-01', '14:45:00', '14:55:00'),
+                                                                                                                                                  (3, 'Pete', 'Worst', 'Pete@worst.nl', '0812456358', 'Pete', 4, '2025-04-01', '15:00:00', '15:10:00'),
+                                                                                                                                                  (4, 'j', 'j', 'j@j.nl', '08133333', 'j', 1, '2025-01-10', '20:00:00', '20:10:00'),
+                                                                                                                                                  (5, 'j', 'b', 'j@j.nl', '081222222', 'j', 1, '2025-02-11', '20:00:00', '20:10:00'),
+                                                                                                                                                  (6, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-14', '15:00:00', '15:10:00'),
+                                                                                                                                                  (7, 'j', 'b', 'j@j.nl', '09', 'k', 1, '2025-01-10', '20:00:00', '20:10:00');
 
 -- --------------------------------------------------------
 
@@ -66,7 +61,7 @@ INSERT INTO `reservations` (`id`, `first_name`, `last_name`, `email`, `phone_num
 
 CREATE TABLE `users` (
                          `id` int NOT NULL,
-                         `admin_key` tinyint(1) DEFAULT NULL,
+                         `admin_key` tinyint(1) NOT NULL,
                          `first_name` varchar(50) NOT NULL,
                          `last_name` varchar(50) NOT NULL,
                          `password` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -79,7 +74,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `admin_key`, `first_name`, `last_name`, `password`, `email`) VALUES
                                                                                             (1, 1, 'Thijs', 'van Loo', '$2y$10$GzNgwLhDH7rrzo4G/IIVdex1XlmTYcE21daHWLoZ5LIqK9qxs2Ig6', '1101318@hr.nl'),
-                                                                                            (4, NULL, 'jordi', 'biever', '$2y$10$p0H5dQRNBM5aRV0eCI1j.uDfA6/Yo.i6zBCXPNroUEymm.fSlJNRS', 'jordi1030@outlook.com');
+                                                                                            (4, 0, 'jordi', 'biever', '$2y$10$p0H5dQRNBM5aRV0eCI1j.uDfA6/Yo.i6zBCXPNroUEymm.fSlJNRS', 'jordi1030@outlook.com');
 
 -- --------------------------------------------------------
 
@@ -125,7 +120,10 @@ INSERT INTO `weeks` (`week_id`, `day_1`, `day_2`, `day_3`, `day_4`, `day_5`) VAL
 
 CREATE TABLE `week_reservation` (
                                     `week_id` int NOT NULL,
-                                    `reservation_id` int NOT NULL
+                                    `reservation_id` int NOT NULL,
+                                    `reservation_date` date NOT NULL,
+                                    `begin_date_week` date NOT NULL,
+                                    `end_date_week` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -172,7 +170,7 @@ ALTER TABLE `week_reservation`
 -- AUTO_INCREMENT voor een tabel `reservations`
 --
 ALTER TABLE `reservations`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT voor een tabel `users`

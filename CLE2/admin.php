@@ -64,7 +64,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                 echo "<td>" . htmlentities($reservations[$i]['comment']) . "</td>";
                 echo "<td>" . htmlentities($reservations[$i]['user_id']) . "</td>";
                 echo "<td>" . htmlentities($reservations[$i]['date']) . "</td>";
-                echo "<td>" . htmlentities($reservations[$i]['time_slot']) . "</td>";
+                echo "<td>" . htmlentities($reservations[$i]['start_time']) . "</td>";
+                echo "<td>" . htmlentities($reservations[$i]['end_time']) . "</td>";
                 echo '</tr>';
             }
             ?>
