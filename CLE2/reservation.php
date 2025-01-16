@@ -132,10 +132,18 @@ if (isset($_POST['submit'])) {
     </script>
     <script>
 
+        function showWeek() {
+            const teacherId = document.getElementById('teachers').value;
+            const weeksContainer = document.getElementById('weeks-container');
+
+            if (teacherId) {
+                weeksContainer.style.display = 'flex';
+            }
+        }
 
         //Functie om de dagen select op te roepen.
         function showDays() {
-            const weekId = document.getElementById('weeks').value; // Correctly get the selected week ID
+            const weekId = document.getElementById('weeks').value;
             const daysContainer = document.getElementById('days-container');
             const dayList = document.getElementById('days');
 
@@ -161,27 +169,26 @@ if (isset($_POST['submit'])) {
 
         //Gebruikt Fetch om alle beschikbaren tijden te pakken.
         function fetchAvailableTimes() {
-
+            //Haal de dag en leraar op.
             const selectedDay = document.getElementById('days').value;
+            const selectedTeacher = document.getElementById('teachers').value;
 
-            if (!selectedDay) {
-                return; // Doe niks als geen dag gekozen is.
+            if (!selectedDay || !selectedTeacher) {
+                return;
             }
 
-            //Maak de form data.
             const formData = new FormData();
-            formData.append('date', selectedDay);
+            formData.append('date', selectedDay); //Voeg de dag toe.
+            formData.append('user_id', selectedTeacher); //Voeg de ID toe.
 
-            // Gebruik AJAX om een fetch request te doen.
             fetch('fetch.php', {
                 method: 'POST',
-                body: formData
+                body: formData,
             })
-                //Als de fetch lukt ga door met het maken van de form.
-                .then(response => response.json())
-                .then(data => {
+                .then((response) => response.json())
+                .then((data) => {
                     const timeContainer = document.getElementById('time-container');
-                    timeContainer.innerHTML = ''; // Clear the previous times
+                    timeContainer.innerHTML = ''; //Maak de lijst leeg.
 
                     //Maak de form.
                     if (data && data.length > 0) {
@@ -195,8 +202,8 @@ if (isset($_POST['submit'])) {
                         select.setAttribute('onchange', 'showData()');
                         select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
 
-                        // Add available times as options
-                        data.forEach(time => {
+                        // Voeg beschikbare tijden to.
+                        data.forEach((time) => {
                             const option = document.createElement('option');
                             option.setAttribute('value', time);
                             option.textContent = time;
@@ -206,19 +213,20 @@ if (isset($_POST['submit'])) {
                         timeContainer.appendChild(label);
                         timeContainer.appendChild(select);
                     } else {
-                        // Geef een bericht door als er geen tijden beschikbaar zijn.
+                        // Geef een bericht door als die leeg is.
                         timeContainer.innerHTML = 'Geen beschikbare tijden voor deze dag.';
                     }
                 })
-                //Error check.
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error fetching available times:', error);
                 });
         }
 
-        // Roep de functie op zodra de dag is gekozen.
-        document.getElementById('days').addEventListener('change', fetchAvailableTimes);
-
+        // Als de data verandert run het opnieuw.
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('teachers').addEventListener('change', fetchAvailableTimes);
+            document.getElementById('days').addEventListener('change', fetchAvailableTimes);
+        });
 
         //Funcitie die alle andere gegevens laat zien.
         function showData() {
@@ -263,15 +271,29 @@ if (isset($_POST['submit'])) {
 <div class="h-screen">
     <main class="flex-grow flex justify-center">
         <form class="flex flex-col justify-between gap-2" method="post" action="">
+            <div id="teacher-container" class="mt-4">
+                <label for="teachers" class="block">Selecteer Docent</label>
+                <select id="teachers" name="teachers"
+                        class="flex flex-col items-center mt-4 border-2 border-black rounded" onchange="showWeek()">
+                    <option value="" disabled selected>Selecteer een docent.</option>
+                    <?php foreach ($docenten as $docent): ?>
+                        <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             <label for="weeks"></label>
-            <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
-                <option value="" disabled selected>Selecteer een week.</option>
-                <?php foreach ($weekData as $weekId => $days): ?>
-                    <option value="<?= htmlspecialchars($weekId); ?>">
-                        Week <?= htmlspecialchars($weekId); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <div id="weeks-container" style="display: none;">
+                <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
+                    <option value="" disabled selected>Selecteer een week.</option>
+                    <?php foreach ($weekData as $weekId => $days): ?>
+                        <option value="<?= htmlspecialchars($weekId); ?>">
+                            Week <?= htmlspecialchars($weekId); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             <div id="days-container" style="display: none;">
                 <label for="days"></label>
                 <select id="days" name="days" class="border-2 border-black rounded p-6"
@@ -300,15 +322,6 @@ if (isset($_POST['submit'])) {
                 <p class="font-bold text-red-600 text-xl">
                     <?= ($errors['emptyEmail']) ?? '' ?>
                 </p>
-                <label for="user_id">Docent</label>
-                <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
-                    <option value="">Selecteer een docent</option>
-                    <?php foreach ($docenten as $docent): ?>
-                        <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($docent['first_name'] . ' ' . $docent['last_name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
                 <label for="phone_number">Telefoon Nummer</label>
                 <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
                        value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
