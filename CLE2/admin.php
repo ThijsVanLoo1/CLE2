@@ -21,7 +21,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $teachers[] = $row;
 }
 
-$admin_id = $_GET['teacher'] ?? 0;
+$admin_id = $_GET['user'] ?? 0;
 
 //Get the current week from the GET or default to 0 (current week)
 $selectedWeek = $_GET['week'] ?? 0;
@@ -102,11 +102,11 @@ $hidden = "hidden";
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
         <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060] block"><?= $text_overview; ?></a>
     </div>
-    <header class="py-4 m-auto w-3/4">
+    <header class="py-4 m-auto w-3/4 flex items-center justify-between">
         <form action="" method="get" class="flex flex-col w-44 gap-2">
-            <label for="teacher">Kies Docent</label>
-            <select id="teacher" name="teacher">
-            <option value="">Selecteer een docent</option>
+            <label for="user">Kies Docent</label>
+            <select id="user" name="user">
+            <option value="0">Selecteer een docent</option>
                 <?php foreach ($teachers as $teacher): ?>
                     <option value="<?= htmlspecialchars($teacher['id']) ?>" <?= ($teacher['id'] == $admin_id) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($teacher['first_name'] . ' ' . $teacher['last_name']) ?>
@@ -115,13 +115,14 @@ $hidden = "hidden";
             </select>
             <button type="submit" name="submit" class="rounded bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">Filter</button>
         </form>
+        <a class="rounded-lg bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D] p-2" href="?week=0&user=<?= $admin_id ?>">Terug naar huidige week</a>
     </header>
-    <main>
+    <main class="max-sm:size-full max-sm:m-0">
         <div class="container">
             <div class="title">
-                <a href="?week=<?= $selectedWeek - 1 ?>">Vorige week</a>
+                <a href="?week=<?= $selectedWeek - 1 ?>&user=<?= $admin_id ?>">Vorige week</a>
                 <span><?= $monthOfWeek . ' ' . $yearOfWeek; ?></span>
-                <a href="?week=<?= $selectedWeek + 1 ?>">Volgende week</a>
+                <a href="?week=<?= $selectedWeek + 1 ?>&user=<?= $admin_id ?>">Volgende week</a>
             </div>
             <div class="days">
                 <div class="filler"></div>
@@ -169,4 +170,15 @@ $hidden = "hidden";
         <li><a href="#over">Contact</a></li>
     </ul>
 </footer>
+
+<script>
+    // Hamburger menu
+    const menuToggle = document.querySelector("#mobile-menu"); // selecteert het id van het element en maakt ervoor een variable aan
+    const navLinks = document.querySelector("#nav-links"); // selecteert het id van het element en maakt ervoor een variable aan
+    // als je op het hamburger menu klikt
+    menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("hidden"); // voegt hij bij de nav links id de class hidden bij zodat hij verdwijnt
+        menuToggle.classList.toggle("open"); // en voegt hij hierbij dat de mobile menu open gaat
+    });
+</script>
 </html>
