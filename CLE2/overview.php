@@ -53,8 +53,7 @@ $yearOfWeek = date('Y', $weekDays[0]['timestamp']);
 $rosterTimes = getRosterTimes();
 
 //The events from the database that are in this week
-$events = getEvents($weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
-
+$events = getEvents($id, $weekDays[0]['fullDate'], $weekDays[4]['fullDate']);
 
 $link = "logout.php";
 $text = "Logout";
