@@ -72,7 +72,7 @@ $docent = $row;
     <p class="text-white text-base">
         Je hebt een reservatie met docent <?= $docent['first_name'] ?> <?= $docent['last_name'] ?>. Deze afspraak is
         op <?= $_SESSION['date'] ?>
-        om <?= $_SESSION['time_slot'] ?>. De afspraak staat geregistreerd onder de
+        om <?= $_SESSION['start_time'] ?>. De afspraak staat geregistreerd onder de
         naam <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?>. Vergeet niet om
         eventuele vragen of onderwerpen die je wilt bespreken voor te bereiden, zodat je het meeste uit je afspraak kunt
         halen. Als je verhinderd bent, laat dit dan tijdig weten om een nieuwe afspraak te plannen.

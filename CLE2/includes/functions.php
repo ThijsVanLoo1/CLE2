@@ -68,17 +68,21 @@ function formatEvent(array $event): array
  * @param string $to
  * @return array
  */
-function getEvents(string $from, string $to): array
+function getEvents(string $teacher_id,string $from, string $to): array
 {
     global $db;
     require_once "database.php";
 
-    $id = $_SESSION['id'];
-
     //Get the result set from the database with an SQL query
-    $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $id";
-    $result = mysqli_query($db, $query);
+    if($_SESSION['admin_key'] == 1) {
+        $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $teacher_id";
+    }
+    else {
+        $id = $_SESSION['id'];
+        $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $id";
+    }
 
+    $result = mysqli_query($db, $query);
     //Loop through the result to create a custom array of events
     $events = [];
     while ($row = mysqli_fetch_assoc($result)) {

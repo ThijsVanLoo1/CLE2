@@ -268,7 +268,7 @@ if (isset($_POST['submit'])) {
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<div class="h-screen">
+<div class="h-150v">
     <main class="flex-grow flex justify-center">
         <form class="flex flex-col justify-between gap-2" method="post" action="">
             <div id="teacher-container" class="mt-4">
@@ -336,7 +336,7 @@ if (isset($_POST['submit'])) {
         </form>
     </main>
 </div>
-<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] sticky bottom-0">
+<footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060]">
     <div class="flex flex-col items-center py-4">
         <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
     </div>
