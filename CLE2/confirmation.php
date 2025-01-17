@@ -3,15 +3,17 @@ session_start();
 global $db;
 require_once "includes/database.php";
 $docent = $_SESSION['docent_id'];
-$link = "login.php";
-$text = "Login";
-if (!empty($_SESSION) === true) {
+$link = "";
+$text = "";
+if ($_SESSION['login'] === true) {
     $link = "logout.php";
     $text = "Logout";
-} else {
-    $link = "login.php";
-    $text = "Login";
 }
+if (empty($docent)) {
+    header('Location: index.php');
+    exit();
+}
+print_r($_SESSION);
 // Docent id ophalen voor de namen
 $query = "SELECT first_name, last_name FROM users where id= $docent";
 $result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);
@@ -46,6 +48,7 @@ $docent = $row;
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
         <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
         <a href="#" class="text-white hover:text-[#003060]">Contact</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>

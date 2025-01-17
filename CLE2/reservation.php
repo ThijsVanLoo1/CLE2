@@ -2,14 +2,14 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 session_start();
-$query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['week_id']] = [
+    $weekData[$row['id']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
@@ -60,6 +60,7 @@ if (isset($_POST['submit'])) {
     $date = $_POST['days'];
     $start_time = $_POST['times'];
     $user_id = $_POST['user_id'];
+    $selected_week = $_POST['weeks'];
     $end_time = date('H:i:s', strtotime($start_time) + 10 * 60);
 
     $errors = [];
@@ -91,6 +92,8 @@ if (isset($_POST['submit'])) {
         $date = mysqli_real_escape_string($db, $date);
         $user_id = mysqli_real_escape_string($db, $user_id);
         $comment = mysqli_real_escape_string($db, $comment);
+        $selected_week = mysqli_escape_string($db, $selected_week);
+
         $_SESSION['first_name'] = $first_name;
         $_SESSION['last_name'] = $last_name;
         $_SESSION['email'] = $email;
@@ -101,13 +104,19 @@ if (isset($_POST['submit'])) {
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$start_time', '$end_time')";
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `week_id`,`date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$selected_week', '$date', '$start_time', '$end_time')";
+        $result = mysqli_query($db, $query)
+        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+        $id_reservation = mysqli_insert_id($db);
+        // Many to many relatie insert
+        $query = "INSERT INTO user_reservation (`user_id`, `reservation_id`) values ('$user_id','$id_reservation')";
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         header('Location: confirmation.php');
-        mysqli_close($db);
-        exit;
     }
+
+    mysqli_close($db);
+    exit;
 }
 ?>
 <!doctype html>

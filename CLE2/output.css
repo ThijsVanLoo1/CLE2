@@ -601,16 +601,16 @@ video {
   margin-bottom: 3rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
 
 .mt-4 {
   margin-top: 1rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
 }
 
 .block {
@@ -637,10 +637,6 @@ video {
   height: 100vh;
 }
 
-.h-150v {
-  height: 150vh;
-}
-
 .h-16 {
   height: 4rem;
 }
@@ -653,8 +649,8 @@ video {
   height: auto;
 }
 
-.h-120v {
-  height: 120vh;
+.h-dvh {
+  height: 100dvh;
 }
 
 .min-h-screen {
@@ -923,11 +919,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
-.text-pink-700 {
-  --tw-text-opacity: 1;
-  color: rgb(190 24 93 / var(--tw-text-opacity, 1));
 }
 
 .transition {

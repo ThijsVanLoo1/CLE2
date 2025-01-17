@@ -1,5 +1,14 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['user'])) {
+    header('Location: index.php');
+    exit();
+}
+
+global $db;
+require_once "includes/database.php";
+
 $link = "login.php";
 $text = "Login";
 if (!empty($_SESSION) === true) {
@@ -9,6 +18,18 @@ if (!empty($_SESSION) === true) {
     $link = "login.php";
     $text = "Login";
 }
+
+$id = $_GET['id'];
+
+$id = mysqli_escape_string($db, $_GET['id']);
+$query = "SELECT * FROM reservations WHERE id = $id";
+
+$result = mysqli_query($db, $query)
+or die('Error '.mysqli_error($db).' with query '.$query);
+
+$reservation = mysqli_fetch_assoc($result);
+
+mysqli_close($db);
 ?>
 <!doctype html>
 <html lang="en">
@@ -18,9 +39,9 @@ if (!empty($_SESSION) === true) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
     <link href="output.css" rel="stylesheet">
-    <title>Home</title>
+    <title>Reservering details</title>
 </head>
-<body class="font-sans">
+<body class="font-asap">
 <nav class="flex items-center justify-between p-6 bg-[#04588D]">
     <div>
         <a href="index.php">
@@ -40,18 +61,39 @@ if (!empty($_SESSION) === true) {
     </div>
 </nav>
 
-<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
-    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
-    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
-</div>
-<div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
-    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060] block ">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
-</div>
+    <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+        <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+        <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
+        <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+        <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+    </div>
+    <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+        <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+        <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
+        <a href="" class="hover:text-[#003060] block ">Contact</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
+    </div>
+
+<main class="flex justify-around">
+    <div>
+        <h1 class="font-bold mb-8 text-3xl px-16 py-8 max-lg:text-xl max-lg:px-4 max-lg:py-3 max-lg:mb-0 max-lg:mt-4">Reservering details</h1>
+        <div class="flex flex-col justify-between px-16 mb-8 text-2xl max-lg:px-4 max-lg:flex-col">
+            <p><strong>Naam:</strong> <?= $reservation['first_name']?> <?= $reservation['last_name'] ?></p>
+            <p><strong>Email:</strong> <?= $reservation['email']?> </p>
+            <p><strong>Telefoon nummer:</strong>  <?= $reservation['phone_number']?></p>
+        </div>
+        <div class="flex flex-col gap-2 justify-between px-16 mb-8 text-2xl">
+            <p><strong>Opmerking</strong></p>
+            <p class="w-3/4 italic mb-12"><?= $reservation['comment'] ?></p>
+        </div>
+    </div>
+    <div class="flex flex-col justify-center items-center gap-4 px-16 py-8 w-1/2">
+        <h1 class="font-bold text-3xl max-lg:text-xl max-lg:px-4 max-lg:py-3 max-lg:mb-0 max-lg:mt-4">Wijzig datum en/of tijd</h1>
+        <p class="text-2xl"><strong>Datum:</strong> <?= $reservation['date'] ?> om <?= $reservation['start_time'] ?></p>
+        <a href="edit.php?id=<?= $id ?>" class="w-1/2 rounded-lg text-center bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">Aanpassen</a>
+    </div>
+</main>
+
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
     <div class="flex flex-col items-center py-4">
         <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
