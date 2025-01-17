@@ -80,35 +80,37 @@ if (isset($_POST['submit'])) {
         $errors['emptyPhoneNumber'] = 'Vul je telefoonnummer in.';
     }
 
-    if (!empty($first_name) && !empty($last_name) && !empty($email) && !empty($phone_number)) {
+    if(empty($errors)) {
+        if (!empty($first_name) && !empty($last_name) && !empty($email) && !empty($phone_number)) {
 
-        $first_name = mysqli_real_escape_string($db, $first_name);
-        $last_name = mysqli_real_escape_string($db, $last_name);
-        $email = mysqli_real_escape_string($db, $email);
-        $phone_number = mysqli_real_escape_string($db, $phone_number);
-        $start_time = mysqli_real_escape_string($db, $start_time);
-        $end_time = mysqli_escape_string($db, $end_time);
-        $date = mysqli_real_escape_string($db, $date);
-        $user_id = mysqli_real_escape_string($db, $user_id);
-        $comment = mysqli_real_escape_string($db, $comment);
-        $_SESSION['first_name'] = $first_name;
-        $_SESSION['last_name'] = $last_name;
-        $_SESSION['email'] = $email;
-        $_SESSION['phone_number'] = $phone_number;
-        $_SESSION['start_time'] = $start_time;
-        $_SESSION['end_time'] = $end_time;
-        $_SESSION['date'] = $date;
-        $_SESSION['docent_id'] = $user_id;
-        $_SESSION['comment'] = $comment;
+            $first_name = mysqli_real_escape_string($db, $first_name);
+            $last_name = mysqli_real_escape_string($db, $last_name);
+            $email = mysqli_real_escape_string($db, $email);
+            $phone_number = mysqli_real_escape_string($db, $phone_number);
+            $start_time = mysqli_real_escape_string($db, $start_time);
+            $end_time = mysqli_escape_string($db, $end_time);
+            $date = mysqli_real_escape_string($db, $date);
+            $user_id = mysqli_real_escape_string($db, $user_id);
+            $comment = mysqli_real_escape_string($db, $comment);
+            $_SESSION['first_name'] = $first_name;
+            $_SESSION['last_name'] = $last_name;
+            $_SESSION['email'] = $email;
+            $_SESSION['phone_number'] = $phone_number;
+            $_SESSION['start_time'] = $start_time;
+            $_SESSION['end_time'] = $end_time;
+            $_SESSION['date'] = $date;
+            $_SESSION['docent_id'] = $user_id;
+            $_SESSION['comment'] = $comment;
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$start_time', '$end_time')";
-        $result = mysqli_query($db, $query)
-        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
-        header('Location: confirmation.php');
+            $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$start_time', '$end_time')";
+            $result = mysqli_query($db, $query)
+            or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+            header('Location: confirmation.php');
+        }
+
+        mysqli_close($db);
+        exit;
     }
-
-    mysqli_close($db);
-    exit;
 }
 ?>
 <!doctype html>
