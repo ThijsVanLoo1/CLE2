@@ -9,6 +9,8 @@ if (!empty($_SESSION) === true) {
     $link = "login.php";
     $text = "Login";
 }
+
+$id = $_GET['id'];
 ?>
 <!doctype html>
 <html lang="en">
@@ -40,18 +42,23 @@ if (!empty($_SESSION) === true) {
     </div>
 </nav>
 
-<div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
-    <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
-    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
-</div>
-<div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
-    <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060] block ">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
-</div>
+    <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
+        <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
+        <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
+        <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
+        <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+    </div>
+    <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
+        <a href="index.php" class="hover:text-[#003060] block ">Home</a>
+        <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
+        <a href="" class="hover:text-[#003060] block ">Contact</a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
+    </div>
+
+<main>
+    <a href="edit.php?id=<?= $id ?>" class="rounded-full bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">Edit</a>
+</main>
+
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
     <div class="flex flex-col items-center py-4">
         <img src="https://www.deeendragt.nl/wp-content/uploads/sites/13/2022/10/IKCElogoklein.jpg" class="w-16 h-16">
