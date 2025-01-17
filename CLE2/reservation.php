@@ -2,14 +2,14 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 session_start();
-$query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['week_id']] = [
+    $weekData[$row['id']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
@@ -50,6 +50,7 @@ while ($time <= $endTime) {
 
 $availableTimes = [];
 
+
 //Wanneer er wordt gedrukt op submit.
 if (isset($_POST['submit'])) {
     $first_name = $_POST['first_name'];
@@ -60,6 +61,7 @@ if (isset($_POST['submit'])) {
     $date = $_POST['days'];
     $start_time = $_POST['times'];
     $user_id = $_POST['user_id'];
+    $selected_week = $_POST['weeks'];
     $end_time = date('H:i:s', strtotime($start_time) + 10 * 60);
 
     $errors = [];
@@ -79,8 +81,11 @@ if (isset($_POST['submit'])) {
     if ($_POST['phone_number'] == '') {
         $errors['emptyPhoneNumber'] = 'Vul je telefoonnummer in.';
     }
+    if ($_POST['weeks'] == '') {
+        $errors['emptyWeek'] = 'Vul een Week in.';
+    }
 
-    if (!empty($first_name) && !empty($last_name) && !empty($email) && !empty($phone_number)) {
+    if (empty($errors)) {
 
         $first_name = mysqli_real_escape_string($db, $first_name);
         $last_name = mysqli_real_escape_string($db, $last_name);
@@ -91,6 +96,8 @@ if (isset($_POST['submit'])) {
         $date = mysqli_real_escape_string($db, $date);
         $user_id = mysqli_real_escape_string($db, $user_id);
         $comment = mysqli_real_escape_string($db, $comment);
+        $selected_week = mysqli_escape_string($db, $selected_week);
+
         $_SESSION['first_name'] = $first_name;
         $_SESSION['last_name'] = $last_name;
         $_SESSION['email'] = $email;
@@ -101,7 +108,12 @@ if (isset($_POST['submit'])) {
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
 
-        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$date', '$start_time', '$end_time')";
+        $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `week_id`,`date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$selected_week', '$date', '$start_time', '$end_time')";
+        $result = mysqli_query($db, $query)
+        or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
+        $id_reservation = mysqli_insert_id($db);
+        // Many to many relatie insert
+        $query = "INSERT INTO user_reservation (`user_id`, `reservation_id`) values ('$user_id','$id_reservation')";
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         header('Location: confirmation.php');
@@ -286,19 +298,19 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
                        value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
                 <p class="font-bold text-red-600 text-xl">
-                    <?= ($errors['emptyFirstName']) ?? '' ?>
+                    <?= $errors['emptyFirstName'] ?? '' ?>
                 </p>
                 <label for="last_name">Achternaam</label>
                 <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
                        value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
                 <p class="font-bold text-red-600 text-xl">
-                    <?= ($errors['emptyLastName']) ?? '' ?>
+                    <?= $errors['emptyLastName'] ?? '' ?>
                 </p>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
                        value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
                 <p class="font-bold text-red-600 text-xl">
-                    <?= ($errors['emptyEmail']) ?? '' ?>
+                    <?= $errors['emptyEmail'] ?? '' ?>
                 </p>
                 <label for="user_id">Docent</label>
                 <select id="user_id" name="user_id" class="border-2 border-black rounded p-4">
@@ -313,7 +325,7 @@ if (isset($_POST['submit'])) {
                 <input type="number" id="phone_number" name="phone_number" class="border-2 border-black rounded p-4"
                        value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
                 <p class="font-bold text-red-600 text-xl">
-                    <?= ($errors['emptyPhoneNumber']) ?? '' ?>
+                    <?= $errors['emptyPhoneNumber'] ?? '' ?>
                 </p>
                 <label for="comment">Comment</label>
                 <textarea rows="5" cols="3" type="text" id="comment" name="comment"
