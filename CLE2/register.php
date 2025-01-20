@@ -28,7 +28,8 @@ if (isset($_POST['submit'])) {
     if (empty($errors)) {
         $securePassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $query = "INSERT INTO users (first_name, last_name, email, password) VALUES ('$firstName', '$lastName', '$email', '$securePassword')";
+        $adminKey = 0;
+        $query = "INSERT INTO users (admin_key, first_name, last_name, email, password) VALUES ('$adminKey', '$firstName', '$lastName', '$email', '$securePassword')";
 
         $result = mysqli_query($db, $query)
         or die('Error ' . mysqli_error($db) . ' with query ' . $query);
