@@ -2,14 +2,14 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 session_start();
-$query = "SELECT id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT week_number, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['id']] = [
+    $weekData[$row['week_number']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
@@ -113,10 +113,9 @@ if (isset($_POST['submit'])) {
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         header('Location: confirmation.php');
+        mysqli_close($db);
+        exit;
     }
-
-    mysqli_close($db);
-    exit;
 }
 ?>
 <!doctype html>
@@ -208,7 +207,7 @@ if (isset($_POST['submit'])) {
                         select.setAttribute('id', 'times');
                         select.setAttribute('name', 'times');
                         select.setAttribute('onchange', 'showData()');
-                        select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
+                        select.setAttribute('class', 'flex flex-col items-center ml-16 border-2 border-black rounded');
 
                         // Voeg beschikbare tijden to.
                         data.forEach((time) => {
@@ -298,9 +297,9 @@ if (isset($_POST['submit'])) {
     <a href="" class="hover:text-[#003060] block ">Contact</a>
 </div>
 
-<header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] my-12">Rooster</header>
+<header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] m-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<div class="h-100v">
+<div class="h-80v">
     <main class="flex-grow flex justify-center">
         <form class="flex flex-col justify-between items-center gap-2" method="post" action="">
             <div id="teacher-container" class="mt-4">
@@ -331,7 +330,7 @@ if (isset($_POST['submit'])) {
             <div id="days-container" style="display: none;">
                 <label for="days"></label>
                 <!--                //Roep Fetch op wanneer er hier iets wordt gekozen.-->
-                <select id="days" name="days" class="border-2 border-black rounded p-6"
+                <select id="days" name="days" class="border-2 border-black rounded p-4"
                         onchange="fetchAvailableTimes()">
                     <option value="" disabled selected>Selecteer een dag.</option>
                 </select>
@@ -339,37 +338,37 @@ if (isset($_POST['submit'])) {
 
             <div id="time-container"></div>
             <div id="data-container" class="flex flex-col items-center gap-4" style="display: none;">
-                <div class="flex flex-row">
-                    <div class="flex flex-col">
+                <div class="flex flex-row gap-4">
+                    <div class="flex flex-col text-center">
                         <label for="first_name">Voornaam</label>
-                        <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-4"
+                        <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-2"
                                value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
                         <p class="font-bold text-red-600 text-xl">
                             <?= ($errors['emptyFirstName']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col text-center">
                         <label for="last_name">Achternaam</label>
-                        <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-4"
+                        <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-2"
                                value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
                         <p class="font-bold text-red-600 text-xl">
                             <?= ($errors['emptyLastName']) ?? '' ?>
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-row">
-                    <div class="flex flex-col">
+                <div class="flex flex-row gap-4">
+                    <div class="flex flex-col text-center">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="border-2 border-black rounded p-4"
+                        <input type="email" id="email" name="email" class="border-2 border-black rounded p-2"
                                value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
                         <p class="font-bold text-red-600 text-xl">
                             <?= ($errors['emptyEmail']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col text-center">
                         <label for="phone_number">Telefoon Nummer</label>
                         <input type="number" id="phone_number" name="phone_number"
-                               class="border-2 border-black rounded p-4"
+                               class="border-2 border-black rounded p-2"
                                value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
                         <p class="font-bold text-red-600 text-xl">
                             <?= ($errors['emptyPhoneNumber']) ?? '' ?>
@@ -378,7 +377,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <label for="comment">Comment</label>
                 <textarea type="text" id="comment" name="comment"
-                          class="border-2 border-black rounded p-4"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
+                          class="border-2 border-black rounded p-2"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
                 <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
             </div>
         </form>

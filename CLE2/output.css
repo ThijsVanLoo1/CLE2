@@ -592,6 +592,10 @@ video {
   visibility: visible;
 }
 
+.m-12 {
+  margin: 3rem;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -607,6 +611,10 @@ video {
 
 .mb-8 {
   margin-bottom: 2rem;
+}
+
+.ml-16 {
+  margin-left: 4rem;
 }
 
 .mt-4 {
@@ -643,6 +651,10 @@ video {
 
 .h-20 {
   height: 5rem;
+}
+
+.h-80v {
+  height: 80vh;
 }
 
 .h-auto {
