@@ -90,9 +90,9 @@ if (isset($_POST['submit'])) {
     $weeks = $_POST['weeks'];
     $days = $_POST['days'];
     $times = $_POST['times'];
-    $end_time = date('H:i:s', strtotime($times) + 10 * 60);
+    $endTime = date('H:i:s', strtotime($times) + 10 * 60);
 
-    $queryUpdate = "UPDATE reservations SET `week_id` = $weeks, `date` = '$days', `start_time` = '$times', `end_time` = '$times' where id = $id";
+    $queryUpdate = "UPDATE reservations SET `week_id` = $weeks, `date` = '$days', `start_time` = '$times', `end_time` = '$endTime' where id = $id";
 
     $result = mysqli_query($db, $queryUpdate)
     or die('Error ' . mysqli_error($db) . ' with query ' . $queryUpdate);
