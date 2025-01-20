@@ -4,14 +4,14 @@ session_start();
 global $db;
 require_once "includes/database.php";
 
-$query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['week_id']] = [
+    $weekData[$row['id']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
