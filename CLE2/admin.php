@@ -152,7 +152,7 @@ $hidden = "hidden";
                 <div class="row row-roster-<?= $index + 1; ?>"></div>
             <?php } ?>
             <?php foreach ($events as $event) { ?>
-                <a href="details.php?id=<?= $event['id'] ?>"
+                <a href="details.php?id=<?= $event['id'] ?>&user=<?= $admin_id ?>"
                    class="event event-item-<?= $event['id']; ?>"><?= $event['first_name'] . " " . $event['last_name']; ?></a>
             <?php } ?>
         </div>
