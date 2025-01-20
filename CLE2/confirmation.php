@@ -3,17 +3,17 @@ session_start();
 global $db;
 require_once "includes/database.php";
 $docent = $_SESSION['docent_id'];
-$link = "";
-$text = "";
-if ($_SESSION['login'] === true) {
+if ($_SESSION['login']) {
     $link = "logout.php";
     $text = "Logout";
+} else {
+    $link = "";
+    $text = "";
 }
 if (empty($docent)) {
     header('Location: index.php');
     exit();
 }
-print_r($_SESSION);
 // Docent id ophalen voor de namen
 $query = "SELECT first_name, last_name FROM users where id= $docent";
 $result = mysqli_query($db, $query) or die('Error ' . mysqli_error($db) . ' with query ' . $query);

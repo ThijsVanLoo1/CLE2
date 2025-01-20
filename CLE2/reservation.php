@@ -103,6 +103,7 @@ if (isset($_POST['submit'])) {
         $_SESSION['date'] = $date;
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
+        $_SESSION['login'] = false;
 
         $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `week_id`,`date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$selected_week', '$date', '$start_time', '$end_time')";
         $result = mysqli_query($db, $query)

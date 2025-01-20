@@ -4,14 +4,13 @@ session_start();
 global $db;
 require_once "includes/database.php";
 
-$query = "SELECT week_id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
-
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['week_id']] = [
+    $weekData[$row['id']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
@@ -19,6 +18,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         $row['day_5']
     ];
 }
+$selectedTeacher = mysqli_escape_string($db, $_GET['user']);
 
 //Genereer de tijden.
 $time = strtotime('12:30');
@@ -43,16 +43,61 @@ if (!empty($_SESSION) === true) {
     $link = "login.php";
     $text = "Login";
 }
-
+$adminKey = $_SESSION['admin_key'];
+// Pakt de geseleceteerde user van de admin
+if ($_SESSION['admin_key'] === '1') {
+    $adminKey = $_SESSION['admin_key'];
+}
+// Kijkt of iemand een admin is
+if ($adminKey === '1') {
+    // Maakt een query aan voor de admin
+    $selectedTeacher = $_GET['user'];
+    $queryTeacher = "SELECT first_name, last_name, id FROM users where id =$selectedTeacher";
+    $resultTeacher = mysqli_query($db, $queryTeacher) or die('Error ' . mysqli_error($db) . ' with query ' . $queryTeacher);
+    $rowTeacher = mysqli_fetch_assoc($resultTeacher);
+} // anders
+else {
+    // Pakt hij het id van de docent
+    $id_docent = $_SESSION['id'];
+    // Daar maakt hij dan een query voor
+    $queryTeacher = "SELECT first_name, last_name, id FROM users where id =$id_docent";
+    $resultTeacher = mysqli_query($db, $queryTeacher) or die('Error ' . mysqli_error($db) . ' with query ' . $queryTeacher);
+    $rowTeacher = mysqli_fetch_assoc($resultTeacher);
+}
+$idTeacher = $rowTeacher['id'];
+$teacherFirstName = $rowTeacher['first_name'];
+$teacherLastName = $rowTeacher['last_name'];
 $id = $_GET['id'];
 
-$queryReservation = "SELECT * FROM reservations where id = $id";
 
-$result = mysqli_query($db, $queryReservation) or die('Error ' . mysqli_error($db) . ' with query ' . $queryReservation);
+$queryReservation = "
+SELECT reservations.id, reservations.user_id, reservations.date, reservations.start_time, reservations.end_time, weeks.week_number,weeks.id as week_id 
+FROM reservations 
+INNER JOIN weeks ON reservations.week_id = weeks.id WHERE reservations.id = $id;";
+
+
+$result = mysqli_query($db, $queryReservation)
+or die('Error ' . mysqli_error($db) . ' with query ' . $queryReservation);
 
 $row = mysqli_fetch_assoc($result);
-$reservation = $row;
-print_r($reservation);
+$timeReservation = $row['start_time'];
+$dateReservation = $row['date'];
+$weekReservation = $row['id'];
+$weekId = $row['week_id'];
+$weekNum = $row['week_number'];
+
+if (isset($_POST['submit'])) {
+    $weeks = $_POST['weeks'];
+    $days = $_POST['days'];
+    $times = $_POST['times'];
+    $endTime = date('H:i:s', strtotime($times) + 10 * 60);
+
+    $queryUpdate = "UPDATE reservations SET `week_id` = $weeks, `date` = '$days', `start_time` = '$times', `end_time` = '$endTime' where id = $id";
+
+    $result = mysqli_query($db, $queryUpdate)
+    or die('Error ' . mysqli_error($db) . ' with query ' . $queryUpdate);
+
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -76,14 +121,23 @@ print_r($reservation);
 <script>
 
 
+    function showWeek() {
+        const teacherId = document.getElementById('user_id').value;
+        const weeksContainer = document.getElementById('weeks-container');
+
+        if (teacherId) {
+            weeksContainer.style.display = 'flex';
+        }
+    }
+
     //Functie om de dagen select op te roepen.
     function showDays() {
-        const weekId = document.getElementById('weeks').value; // Correctly get the selected week ID
+        const weekId = document.getElementById('weeks').value;
         const daysContainer = document.getElementById('days-container');
         const dayList = document.getElementById('days');
 
         // Maak de lijst leeg.
-        dayList.innerHTML = '<option value="" disabled selected>Selecteer een dag.</option>';
+        dayList.innerHTML = '<option value="<?= $dateReservation?>" selected><?= $dateReservation?></option>';
         daysContainer.style.display = 'none';
 
         // Vul de lijst in.
@@ -104,27 +158,26 @@ print_r($reservation);
 
     //Gebruikt Fetch om alle beschikbaren tijden te pakken.
     function fetchAvailableTimes() {
-
+        //Haal de dag en leraar op.
         const selectedDay = document.getElementById('days').value;
+        const selectedTeacher = document.getElementById('user_id').value;
 
-        if (!selectedDay) {
-            return; // Doe niks als geen dag gekozen is.
+        if (!selectedDay || !selectedTeacher) {
+            return;
         }
 
-        //Maak de form data.
         const formData = new FormData();
-        formData.append('date', selectedDay);
+        formData.append('date', selectedDay); //Voeg de dag toe.
+        formData.append('user_id', selectedTeacher); //Voeg de ID toe.
 
-        // Gebruik AJAX om een fetch request te doen.
         fetch('fetch.php', {
             method: 'POST',
-            body: formData
+            body: formData,
         })
-            //Als de fetch lukt ga door met het maken van de form.
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 const timeContainer = document.getElementById('time-container');
-                timeContainer.innerHTML = ''; // Clear the previous times
+                timeContainer.innerHTML = ''; //Maak de lijst leeg.
 
                 //Maak de form.
                 if (data && data.length > 0) {
@@ -138,8 +191,8 @@ print_r($reservation);
                     select.setAttribute('onchange', 'showData()');
                     select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
 
-                    // Add available times as options
-                    data.forEach(time => {
+                    // Voeg beschikbare tijden to.
+                    data.forEach((time) => {
                         const option = document.createElement('option');
                         option.setAttribute('value', time);
                         option.textContent = time;
@@ -149,19 +202,44 @@ print_r($reservation);
                     timeContainer.appendChild(label);
                     timeContainer.appendChild(select);
                 } else {
-                    // Geef een bericht door als er geen tijden beschikbaar zijn.
+                    // Geef een bericht door als die leeg is.
                     timeContainer.innerHTML = 'Geen beschikbare tijden voor deze dag.';
                 }
             })
-            //Error check.
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching available times:', error);
             });
     }
 
-    // Roep de functie op zodra de dag is gekozen.
-    document.getElementById('days').addEventListener('change', fetchAvailableTimes);
+    // Als de data verandert run het opnieuw.
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectedWeek = "<?= $_POST['weeks'] ?? '' ?>";
+        const selectedDay = "<?= $_POST['days'] ?? '' ?>";
+        const selectedTeacher = "<?= $_POST['user_id'] ?? '' ?>";
 
+        // Maak de gegevens opnieuw.
+        if (selectedTeacher) {
+            document.getElementById('user_id').value = selectedTeacher;
+            showWeek();
+        }
+        if (selectedWeek) {
+            document.getElementById('weeks').value = selectedWeek;
+            showDays();
+        }
+
+        // Doe de fetch opnieuw.
+        if (selectedDay) {
+            document.getElementById('days').value = selectedDay;
+            fetchAvailableTimes();
+        }
+
+        // Maak de containers opnieuw.
+        const selectedTime = "<?= $_POST['times'] ?? '' ?>";
+        if (selectedTime) {
+            document.getElementById('times').value = selectedTime;
+            showData();
+        }
+    });
 
     //Funcitie die alle andere gegevens laat zien.
     function showData() {
@@ -206,10 +284,18 @@ print_r($reservation);
 </div>
 <main class="h-dvh bg-[#04588D] p-6">
     <form method="post" action="">
+        <div id="teacher-container" class="mt-4 hidden">
+            <label for="user_id" class="block font-asap"></label>
+            <select id="user_id" name="user_id"
+                    class="flex flex-col items-center mt-4 border-2 border-black rounded" onchange="showWeek()">
+                <option class="font-asap" value="<?= $idTeacher; ?>"
+                        selected><?= $teacherFirstName ?> <?= $teacherLastName ?></option>
+            </select>
+        </div>
         <label for="weeks"></label>
         <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
             <!-- Hier moet nog een zelfde value van de reservatie  -->
-            <option value="" disabled selected>Selecteer een week.</option>
+            <option value="<?= $weekId ?>" selected> Week <?= $weekNum ?></option>
             <?php foreach ($weekData as $weekId => $days): ?>
                 <option value="<?= htmlspecialchars($weekId); ?>">
                     Week <?= htmlspecialchars($weekId); ?>
@@ -218,14 +304,18 @@ print_r($reservation);
         </select>
         <div id="days-container" style="display: none;">
             <label for="days"></label>
+            <!--                //Roep Fetch op wanneer er hier iets wordt gekozen.-->
             <select id="days" name="days" class="border-2 border-black rounded p-6"
                     onchange="fetchAvailableTimes()">
-                <option value="<?= $reservation['date'] ?>" disabled selected>Selecteer een dag.</option>
+                <option value="<?= $dateReservation ?>" selected><?= $dateReservation ?></option>
             </select>
         </div>
+        <script type="text/javascript">showDays()</script>
 
         <div id="time-container"></div>
         <div id="data-container" class="flex flex-col gap-4" style="display: none;">
+            <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+            <script type="text/javascript">fetchAvailableTimes()</script>
     </form>
 </main>
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">

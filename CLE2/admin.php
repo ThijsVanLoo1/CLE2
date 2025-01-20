@@ -46,8 +46,8 @@ $events = getEvents($admin_id, $weekDays[0]['fullDate'], $weekDays[4]['fullDate'
 
 $link = "logout.php";
 $text = "Logout";
-$link_login = "overview.php";
-$text_overview = "Overview";
+$link_register = "register.php";
+$text_register = "Registreer";
 $hidden = "hidden";
 ?>
 
@@ -80,7 +80,7 @@ $hidden = "hidden";
         <a href="reservation.php" class="text-white hover:text-[#003060] <?= $hidden ?>">Afspraak maken</a>
         <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
-        <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060]"><?= $text_overview; ?></a>
+        <a href="<?= $link_register; ?>" class="text-white hover:text-[#003060]"><?= $text_register; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -95,15 +95,15 @@ $hidden = "hidden";
         maken</a>
     <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
     <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
-    <a href="<?= $link_login; ?>"
-       class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text_overview; ?></a>
+    <a href="<?= $link_register; ?>"
+       class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text_register; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
     <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
     <a href="" class="hover:text-[#003060] block ">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
-    <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060] block"><?= $text_overview; ?></a>
+    <a href="<?= $link_register; ?>" class="text-white hover:text-[#003060] block"><?= $text_register; ?></a>
 </div>
 
 <header class="py-4 m-auto w-3/4 flex items-center justify-between">
@@ -152,7 +152,7 @@ $hidden = "hidden";
                 <div class="row row-roster-<?= $index + 1; ?>"></div>
             <?php } ?>
             <?php foreach ($events as $event) { ?>
-                <a href="details.php?id=<?= $event['id'] ?>"
+                <a href="details.php?id=<?= $event['id'] ?>&user=<?= $admin_id ?>"
                    class="event event-item-<?= $event['id']; ?>"><?= $event['first_name'] . " " . $event['last_name']; ?></a>
             <?php } ?>
         </div>
