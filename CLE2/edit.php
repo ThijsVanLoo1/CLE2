@@ -138,7 +138,6 @@ if (isset($_POST['submit'])) {
 
         // Maak de lijst leeg.
         dayList.innerHTML = '<option value="<?= $dateReservation?>" selected><?= $dateReservation?></option>';
-        daysContainer.style.display = 'none';
 
         // Vul de lijst in.
         if (weekId && weekData[weekId]) {
@@ -151,7 +150,7 @@ if (isset($_POST['submit'])) {
                     dayList.appendChild(option);
                 }
             });
-            daysContainer.style.display = 'block'; // Laat de lijst zien.
+            // Laat de lijst zien.
         }
 
     }
@@ -282,19 +281,21 @@ if (isset($_POST['submit'])) {
     <a href="" class="hover:text-[#003060] block ">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
 </div>
-<main class="h-dvh bg-[#04588D] p-6">
-    <form method="post" action="">
-        <div id="teacher-container" class="mt-4 hidden">
+<main class="h-100v w-full flex justify-center items-center m-auto flex-col gap-4">
+    <h1 class=" text-xl">Wijzig reservatie</h1>
+    <form method="post" action="" class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]">
+        <div id="teacher-container" class="mt-4 hidden p-2">
             <label for="user_id" class="block font-asap"></label>
             <select id="user_id" name="user_id"
-                    class="flex flex-col items-center mt-4 border-2 border-black rounded" onchange="showWeek()">
-                <option class="font-asap" value="<?= $idTeacher; ?>"
+                    class="flex flex-col items-center mt-4 border-2 border-black rounded w-full text-black"
+                    onchange="showWeek()">
+                <option class="font-asap text-black" value="<?= $idTeacher; ?>"
                         selected><?= $teacherFirstName ?> <?= $teacherLastName ?></option>
             </select>
         </div>
-        <label for="weeks"></label>
-        <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
-            <!-- Hier moet nog een zelfde value van de reservatie  -->
+        <label for="weeks" class="mx-2">Welke week:</label>
+        <select id="weeks" name="weeks" onchange="showDays()"
+                class="border-2 border-black rounded p-2 m-2 w-full font-poppins bg-white text-black">
             <option value="<?= $weekId ?>" selected> Week <?= $weekNum ?></option>
             <?php foreach ($weekData as $weekId => $days): ?>
                 <option value="<?= htmlspecialchars($weekId); ?>">
@@ -302,20 +303,22 @@ if (isset($_POST['submit'])) {
                 </option>
             <?php endforeach; ?>
         </select>
-        <div id="days-container" style="display: none;">
-            <label for="days"></label>
-            <!--                //Roep Fetch op wanneer er hier iets wordt gekozen.-->
-            <select id="days" name="days" class="border-2 border-black rounded p-6"
+        <div id="days-container" class="flex flex-col">
+            <label for="days" class="mx-2">Welke Dag</label>
+            <select id="days" name="days" class="border-2 border-black rounded p-6 mx-2 bg-white text-black"
                     onchange="fetchAvailableTimes()">
                 <option value="<?= $dateReservation ?>" selected><?= $dateReservation ?></option>
             </select>
         </div>
         <script type="text/javascript">showDays()</script>
 
-        <div id="time-container"></div>
-        <div id="data-container" class="flex flex-col gap-4" style="display: none;">
-            <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+        <div id="time-container" class="w-full m-2 text-black"></div>
+        <div id="data-container" class="flex flex-col gap-4 rounded"
+             style="display: none; background-color: white;">
+            <input type="submit" name="submit" value="Bevestig Keuze"
+                   class="border-2 border-black rounded p-4 bg-white text-black">
             <script type="text/javascript">fetchAvailableTimes()</script>
+        </div>
     </form>
 </main>
 <footer class="flex flex-col sm:flex-row sm:gap-3 justify-around p-4 bg-[#003060] ">
