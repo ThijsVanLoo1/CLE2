@@ -3,7 +3,7 @@
 session_start();
 
 if ($_SESSION['admin_key'] != 1) {
-    header('location: overview.php');
+    header('location: login.php');
 }
 
 global $db;
@@ -121,6 +121,7 @@ $hidden = "hidden";
             Filter
         </button>
     </form>
+    <a href="editweeks.php" class="w-1/6 text-center rounded-lg bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D] p-2">Verander beschikbare weken</a>
     <a class="rounded-lg bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D] p-2"
        href="?week=0&user=<?= $admin_id ?>">Terug naar huidige week</a>
 </header>

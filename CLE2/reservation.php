@@ -2,14 +2,14 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 session_start();
-$query = "SELECT week_number, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id ,week_number, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
 //Genereer de weken.
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $weekData[$row['week_number']] = [
+    $weekData[$row['id']] = [
         $row['day_1'],
         $row['day_2'],
         $row['day_3'],
@@ -103,7 +103,12 @@ if (isset($_POST['submit'])) {
         $_SESSION['date'] = $date;
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
-        $_SESSION['login'] = false;
+        if ($_SESSION['login'] === true){
+            $_SESSION['login'] = true;
+        }else{
+            $_SESSION['login'] = false;
+        }
+
 
         $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `week_id`,`date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$selected_week', '$date', '$start_time', '$end_time')";
         $result = mysqli_query($db, $query)
