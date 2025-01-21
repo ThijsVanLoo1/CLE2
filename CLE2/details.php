@@ -19,14 +19,12 @@ if (!empty($_SESSION) === true) {
     $text = "Login";
 }
 
-$id = $_GET['id'];
-
 $id = mysqli_escape_string($db, $_GET['id']);
+
 if ($_SESSION['admin_key'] === '1') {
     $selectedTeacher = mysqli_escape_string($db, $_GET['user']);
 }
 $query = "SELECT * FROM reservations WHERE id = $id";
-
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
@@ -91,12 +89,30 @@ mysqli_close($db);
             <p class="w-3/4 italic mb-12"><?= $reservation['comment'] ?></p>
         </div>
     </div>
-    <div class="flex flex-col justify-center items-center gap-4 px-16 py-8 w-1/2">
+    <div class="flex flex-col justify-center items-center gap-4 px-16 py-8">
         <h1 class="font-bold text-3xl max-lg:text-xl max-lg:px-4 max-lg:py-3 max-lg:mb-0 max-lg:mt-4">Wijzig datum en/of
             tijd</h1>
         <p class="text-2xl"><strong>Datum:</strong> <?= $reservation['date'] ?> om <?= $reservation['start_time'] ?></p>
         <a href="edit.php?id=<?= $id ?>&user=<?= $_SESSION['admin_key'] === '1' ? $selectedTeacher : '' ?>"
            class="w-1/2 rounded-lg text-center bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">Aanpassen</a>
+            <button id="myButton" onclick="buttonClicker()" class="rounded-lg text-center bg-[#FF0000] font-bold text-white p-2 hover:bg-[#CC0202]">Verwijderen</button>
+            <script>
+                function buttonClicker() {
+                    // Get the button element
+                    const button = document.getElementById('myButton');
+
+                    // Add a click event listener to the button
+                    button.addEventListener('click', function () {
+                        let result = "Weet je zeker dat je deze reservering wilt verwijderen?";
+                        confirm(result);
+                        if (result) {
+                            window.location.href = "delete.php?id=<?= $id ?>";
+                        } else {
+                            window.location.href = "details.php?id=<?= $id ?>";
+                        }
+                    });
+                }
+            </script>
     </div>
 </main>
 
