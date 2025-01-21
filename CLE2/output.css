@@ -605,6 +605,10 @@ video {
   margin-bottom: 3rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
@@ -615,10 +619,6 @@ video {
 
 .mt-4 {
   margin-top: 1rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
 }
 
 .block {
@@ -643,10 +643,6 @@ video {
 
 .h-100v {
   height: 100vh;
-}
-
-.h-150v {
-  height: 150vh;
 }
 
 .h-16 {
@@ -873,6 +869,10 @@ video {
 
 .font-asap {
   font-family: Asap, sans-serif;
+}
+
+.font-poppins {
+  font-family: Poppins, sans-serif;
 }
 
 .font-sans {
