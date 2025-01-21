@@ -2,7 +2,7 @@
 /** @var mysqli $db */
 require_once "includes/database.php";
 session_start();
-$query = "SELECT id ,week_number, day_1, day_2, day_3, day_4, day_5 FROM weeks";
+$query = "SELECT id, week_number, day_1, day_2, day_3, day_4, day_5 FROM weeks";
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
@@ -10,11 +10,14 @@ or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 $weekData = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $weekData[$row['id']] = [
-        $row['day_1'],
-        $row['day_2'],
-        $row['day_3'],
-        $row['day_4'],
-        $row['day_5']
+        'week_number' => $row['week_number'],
+        'days' => [
+            $row['day_1'],
+            $row['day_2'],
+            $row['day_3'],
+            $row['day_4'],
+            $row['day_5'],
+        ],
     ];
 }
 
@@ -62,6 +65,24 @@ if (isset($_POST['submit'])) {
     $user_id = $_POST['user_id'];
     $selected_week = $_POST['weeks'];
     $end_time = date('H:i:s', strtotime($start_time) + 10 * 60);
+
+    //Mail variabelen.
+    $to = $email;
+    $from = "placeholder@email.com";
+    $subject = "Reservatie Bevestiging";
+    $message = '
+    <html>
+    <head>
+    <title>Bevestiging Email</title>
+    </head>
+    <body>
+    <h1>"Dank u wel voor uw reservering!</h1>
+    <p>Uw reservering is bevestigt!</p>
+    </body>
+    </html>
+    ';
+    $headers = "From:" . $from;
+    mail($to, $subject, $message, $headers);
 
     $errors = [];
 
@@ -164,18 +185,18 @@ if (isset($_POST['submit'])) {
             dayList.innerHTML = '<option value="" disabled selected>Selecteer een dag.</option>';
             daysContainer.style.display = 'none';
 
-            // Vul de lijst in.
+            //Vul de lijst in.
             if (weekId && weekData[weekId]) {
-                const days = weekData[weekId];
+                const days = weekData[weekId]['days'];
                 days.forEach(day => {
-                    if (day) { // Sla lege dagen over.
+                    if (day) {
                         const option = document.createElement('option');
                         option.value = day;
                         option.textContent = day;
                         dayList.appendChild(option);
                     }
                 });
-                daysContainer.style.display = 'block'; // Laat de lijst zien.
+                daysContainer.style.display = 'block';
             }
 
         }
@@ -207,13 +228,14 @@ if (isset($_POST['submit'])) {
                     if (data && data.length > 0) {
                         const label = document.createElement('label');
                         label.setAttribute('for', 'times');
+                        label.setAttribute('class', 'm-2');
                         label.textContent = `Selecteer Tijd voor ${selectedDay}`;
 
                         const select = document.createElement('select');
                         select.setAttribute('id', 'times');
                         select.setAttribute('name', 'times');
                         select.setAttribute('onchange', 'showData()');
-                        select.setAttribute('class', 'flex flex-col items-center ml-16 border-2 border-black rounded');
+                        select.setAttribute('class', 'flex flex-col items-center p-2 m-2 border-2 border-black rounded font-poppins text-black');
 
                         // Voeg beschikbare tijden to.
                         data.forEach((time) => {
@@ -305,14 +327,15 @@ if (isset($_POST['submit'])) {
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] m-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<div class="h-80v">
-    <main class="flex-grow flex justify-center">
-        <form class="flex flex-col justify-between items-center gap-2" method="post" action="">
-            <div id="teacher-container" class="mt-4">
-                <label for="user_id" class="block font-asap"></label>
+<div class="h-100v">
+    <main class="w-full flex justify-center items-center m-auto flex-col gap-4 text-black p-3">
+        <form class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]" method="post" action="">
+            <div id="teacher-container" class="mt-4 p-2">
+                <label for="user_id" class=" font-asap">Kies Docent:</label>
                 <select id="user_id" name="user_id"
-                        class="flex flex-col items-center mt-4 border-2 border-black rounded" onchange="showWeek()">
-                    <option class="font-asap" value="" disabled selected>Selecteer een docent.</option>
+                        class="flex flex-col items-center mt-4 border-2 border-black rounded w-full text-black p-2"
+                        onchange="showWeek()">
+                    <option class="font-poppins text-black" value="" disabled selected>Selecteer een docent.</option>
                     <!--                    //Genereer de lijst met docenten: De voornaam en achternaam.-->
                     <?php foreach ($docenten as $docent): ?>
                         <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
@@ -321,14 +344,15 @@ if (isset($_POST['submit'])) {
                     <?php endforeach; ?>
                 </select>
             </div>
-            <label for="weeks"></label>
+            <label for="weeks" class="font-asap text-white"></label>
             <div id="weeks-container" style="display: none;">
-                <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
-                    <option value="" disabled selected>Selecteer een week.</option>
+                <select id="weeks" name="weeks" onchange="showDays()"
+                        class="border-2 border-black rounded p-2 text-black mx-2 w-full">
+                    <option class="font-poppins" value="" disabled selected>Selecteer een week.</option>
                     <!--                    //Genereer de lijst met weken.-->
-                    <?php foreach ($weekData as $weekId => $days): ?>
+                    <?php foreach ($weekData as $weekId => $data): ?>
                         <option value="<?= htmlspecialchars($weekId); ?>" <?= ($weekId == ($_POST['weeks'] ?? '')) ? 'selected' : ''; ?>>
-                            Week <?= htmlspecialchars($weekId); ?>
+                            Week <?= htmlspecialchars($data['week_number']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -336,55 +360,59 @@ if (isset($_POST['submit'])) {
             <div id="days-container" style="display: none;">
                 <label for="days"></label>
                 <!--                //Roep Fetch op wanneer er hier iets wordt gekozen.-->
-                <select id="days" name="days" class="border-2 border-black rounded p-4"
+                <select id="days" name="days" class="border-2 border-black rounded p-2 text-black m-2 w-full"
                         onchange="fetchAvailableTimes()">
-                    <option value="" disabled selected>Selecteer een dag.</option>
+                    <option class="font-poppins" value="" disabled selected>Selecteer een dag.</option>
                 </select>
             </div>
 
             <div id="time-container"></div>
-            <div id="data-container" class="flex flex-col items-center gap-4" style="display: none;">
-                <div class="flex flex-row gap-4">
-                    <div class="flex flex-col text-center">
-                        <label for="first_name">Voornaam</label>
-                        <input type="text" id="first_name" name="first_name" class="border-2 border-black rounded p-2"
+            <div id="data-container" class="flex flex-col items-center" style="display: none;">
+                <div class="flex flex-row gap-3">
+                    <div class="flex flex-col text-center w-full">
+                        <label class="font-poppins" for="first_name">Voornaam</label>
+                        <input type="text" id="first_name" name="first_name"
+                               class="border-2 border-black rounded p-2 text-black w-full"
                                value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
-                        <p class="font-bold text-red-600 text-xl">
+                        <p class="font-asap font-bold text-red-600 text-xl">
                             <?= ($errors['emptyFirstName']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center">
-                        <label for="last_name">Achternaam</label>
-                        <input type="text" id="last_name" name="last_name" class="border-2 border-black rounded p-2"
+                    <div class="flex flex-col text-center w-full">
+                        <label class="font-poppins" for="last_name">Achternaam</label>
+                        <input type="text" id="last_name" name="last_name"
+                               class="border-2 border-black rounded p-2 font-poppins w-full"
                                value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
-                        <p class="font-bold text-red-600 text-xl">
+                        <p class="font-poppins font-bold text-red-600 text-xl">
                             <?= ($errors['emptyLastName']) ?? '' ?>
                         </p>
                     </div>
                 </div>
                 <div class="flex flex-row gap-4">
-                    <div class="flex flex-col text-center">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="border-2 border-black rounded p-2"
+                    <div class="flex flex-col text-center w-full">
+                        <label class="font-poppins" for="email">Email</label>
+                        <input type="email" id="email" name="email"
+                               class="border-2 border-black rounded p-2 font-poppins w-full"
                                value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
-                        <p class="font-bold text-red-600 text-xl">
+                        <p class="font-bold font-poppins text-red-600 text-xl">
                             <?= ($errors['emptyEmail']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center">
-                        <label for="phone_number">Telefoon Nummer</label>
+                    <div class="flex flex-col text-center w-full">
+                        <label class="font-poppins" for="phone_number">Telefoon Nummer</label>
                         <input type="number" id="phone_number" name="phone_number"
-                               class="border-2 border-black rounded p-2"
+                               class="border-2 border-black rounded p-2 font-poppins w-full"
                                value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
-                        <p class="font-bold text-red-600 text-xl">
+                        <p class="font-asap font-bold text-red-600 text-xl">
                             <?= ($errors['emptyPhoneNumber']) ?? '' ?>
                         </p>
                     </div>
                 </div>
-                <label for="comment">Comment</label>
+                <label for="comment">Opmerking</label>
                 <textarea type="text" id="comment" name="comment"
-                          class="border-2 border-black rounded p-2"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
-                <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+                          class="border-2 border-black rounded p-2 font-poppins mb-5"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
+                <input type="submit" name="submit" value="Bevestig Keuze"
+                       class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-1/2 transition ease-in-out delay-150">
             </div>
         </form>
     </main>
