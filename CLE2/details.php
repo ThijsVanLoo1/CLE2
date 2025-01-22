@@ -9,24 +9,12 @@ if (!isset($_SESSION['user'])) {
 global $db;
 require_once "includes/database.php";
 
-$link = "login.php";
-$text = "Login";
-if (!empty($_SESSION) === true) {
-    $link = "logout.php";
-    $text = "Logout";
-} else {
-    $link = "login.php";
-    $text = "Login";
-}
-
-$id = $_GET['id'];
-
 $id = mysqli_escape_string($db, $_GET['id']);
+
 if ($_SESSION['admin_key'] === '1') {
     $selectedTeacher = mysqli_escape_string($db, $_GET['user']);
 }
 $query = "SELECT * FROM reservations WHERE id = $id";
-
 $result = mysqli_query($db, $query)
 or die('Error ' . mysqli_error($db) . ' with query ' . $query);
 
@@ -54,8 +42,7 @@ mysqli_close($db);
     </div>
     <div class="hidden md:flex gap-6 nav-links p-8">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
-        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+        <a href="logout.php" class="text-white hover:text-[#003060]">Logout</a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -66,15 +53,11 @@ mysqli_close($db);
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
-    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+    <a href="logout.php" class="text-white block text-center p-2 bg-[#003060] border-b">Logout</a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060] block ">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
+    <a href="logout.php" class="text-white hover:text-[#003060] block ">Logout</a>
 </div>
 
 <main class="flex justify-around">
@@ -91,12 +74,30 @@ mysqli_close($db);
             <p class="w-3/4 italic mb-12"><?= $reservation['comment'] ?></p>
         </div>
     </div>
-    <div class="flex flex-col justify-center items-center gap-4 px-16 py-8 w-1/2">
+    <div class="flex flex-col justify-center items-center gap-4 px-16 py-8">
         <h1 class="font-bold text-3xl max-lg:text-xl max-lg:px-4 max-lg:py-3 max-lg:mb-0 max-lg:mt-4">Wijzig datum en/of
             tijd</h1>
         <p class="text-2xl"><strong>Datum:</strong> <?= $reservation['date'] ?> om <?= $reservation['start_time'] ?></p>
         <a href="edit.php?id=<?= $id ?>&user=<?= $_SESSION['admin_key'] === '1' ? $selectedTeacher : '' ?>"
            class="w-1/2 rounded-lg text-center bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D]">Aanpassen</a>
+            <button id="myButton" onclick="buttonClicker()" class="rounded-lg text-center bg-[#FF0000] font-bold text-white p-2 hover:bg-[#CC0202]">Verwijderen</button>
+            <script>
+                function buttonClicker() {
+                    // Get the button element
+                    const button = document.getElementById('myButton');
+
+                    // Add a click event listener to the button
+                    button.addEventListener('click', function () {
+                        let result = "Weet je zeker dat je deze reservering wilt verwijderen?";
+                        confirm(result);
+                        if (result) {
+                            window.location.href = "delete.php?id=<?= $id ?>";
+                        } else {
+                            window.location.href = "details.php?id=<?= $id ?>";
+                        }
+                    });
+                }
+            </script>
     </div>
 </main>
 
@@ -115,8 +116,8 @@ mysqli_close($db);
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
-        <li><a href="#over">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="logout.php">Logout</a></li>
     </ul>
 </footer>
 

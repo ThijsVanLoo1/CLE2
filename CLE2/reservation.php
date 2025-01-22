@@ -124,10 +124,14 @@ if (isset($_POST['submit'])) {
         $_SESSION['date'] = $date;
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
-        $_SESSION['login'] = false;
+        if ($_SESSION['login'] === true) {
+            $_SESSION['login'] = true;
+        } else {
+            $_SESSION['login'] = false;
+        }
+
 
         $query = "INSERT INTO reservations (`first_name`, `last_name`, `email`, `phone_number`, `comment`, `user_id`, `week_id`,`date`, `start_time`, `end_time`) VALUES ('$first_name', '$last_name', '$email', '$phone_number', '$comment', '$user_id', '$selected_week', '$date', '$start_time', '$end_time')";
-        echo $query;
         $result = mysqli_query($db, $query)
         or die('Error: ' . mysqli_error($db) . ' with query ' . $query);
         $id_reservation = mysqli_insert_id($db);
@@ -194,6 +198,7 @@ if (isset($_POST['submit'])) {
                 });
                 daysContainer.style.display = 'block';
             }
+
         }
 
         //Gebruikt Fetch om alle beschikbaren tijden te pakken.
@@ -223,13 +228,14 @@ if (isset($_POST['submit'])) {
                     if (data && data.length > 0) {
                         const label = document.createElement('label');
                         label.setAttribute('for', 'times');
+                        label.setAttribute('class', 'm-2');
                         label.textContent = `Selecteer Tijd voor ${selectedDay}`;
 
                         const select = document.createElement('select');
                         select.setAttribute('id', 'times');
                         select.setAttribute('name', 'times');
                         select.setAttribute('onchange', 'showData()');
-                        select.setAttribute('class', 'flex flex-col items-center ml-16 border-2 border-black rounded font-poppins');
+                        select.setAttribute('class', 'flex flex-col items-center p-2 m-2 border-2 border-black rounded font-poppins text-black');
 
                         // Voeg beschikbare tijden to.
                         data.forEach((time) => {
@@ -321,14 +327,15 @@ if (isset($_POST['submit'])) {
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] m-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<div class="h-80v">
-    <main class="flex-grow flex justify-center">
-        <form class="flex flex-col justify-between items-center gap-2" method="post" action="">
-            <div id="teacher-container" class="mt-4">
-                <label for="user_id" class="block"></label>
+<div class="mb-40">
+    <main class="w-full flex justify-center items-center m-auto flex-col gap-4 text-black p-3">
+        <form class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]" method="post" action="">
+            <div id="teacher-container" class="mt-4 p-2">
+                <label for="user_id" class=" font-asap">Kies Docent:</label>
                 <select id="user_id" name="user_id"
-                        class="flex flex-col items-center mt-4 border-2 border-black rounded" onchange="showWeek()">
-                    <option class="font-poppins" value="" disabled selected>Selecteer een docent.</option>
+                        class="flex flex-col items-center mt-4 border-2 border-black rounded w-full text-black p-2"
+                        onchange="showWeek()">
+                    <option class="font-poppins text-black" value="" disabled selected>Selecteer een docent.</option>
                     <!--                    //Genereer de lijst met docenten: De voornaam en achternaam.-->
                     <?php foreach ($docenten as $docent): ?>
                         <option value="<?= htmlspecialchars($docent['id']) ?>" <?= ($docent['id'] == $current_user_id) ? 'selected' : '' ?>>
@@ -337,9 +344,10 @@ if (isset($_POST['submit'])) {
                     <?php endforeach; ?>
                 </select>
             </div>
-            <label for="weeks"></label>
+            <label for="weeks" class="font-asap text-white"></label>
             <div id="weeks-container" style="display: none;">
-                <select id="weeks" name="weeks" onchange="showDays()" class="border-2 border-black rounded">
+                <select id="weeks" name="weeks" onchange="showDays()"
+                        class="border-2 border-black rounded p-2 text-black mx-2 w-full">
                     <option class="font-poppins" value="" disabled selected>Selecteer een week.</option>
                     <!--                    //Genereer de lijst met weken.-->
                     <?php foreach ($weekData as $weekId => $data): ?>
@@ -352,58 +360,59 @@ if (isset($_POST['submit'])) {
             <div id="days-container" style="display: none;">
                 <label for="days"></label>
                 <!--                //Roep Fetch op wanneer er hier iets wordt gekozen.-->
-                <select id="days" name="days" class="border-2 border-black rounded p-4"
+                <select id="days" name="days" class="border-2 border-black rounded p-2 text-black m-2 w-full"
                         onchange="fetchAvailableTimes()">
                     <option class="font-poppins" value="" disabled selected>Selecteer een dag.</option>
                 </select>
             </div>
 
             <div id="time-container"></div>
-            <div id="data-container" class="flex flex-col items-center gap-4" style="display: none;">
-                <div class="flex flex-row gap-4">
-                    <div class="flex flex-col text-center">
+            <div id="data-container" class="flex flex-col" style="display: none;">
+                <div class="flex lg:flex-col gap-4 flex-col">
+                    <div class="flex flex-col w-full">
                         <label class="font-poppins" for="first_name">Voornaam</label>
                         <input type="text" id="first_name" name="first_name"
-                               class="border-2 border-black rounded p-2 font-poppins"
+                               class="border-2 border-black rounded p-2 text-black w-full"
                                value="<?= htmlspecialchars($_POST['first_name'] ?? $first_name ?? "") ?>">
                         <p class="font-asap font-bold text-red-600 text-xl">
                             <?= ($errors['emptyFirstName']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center">
+                    <div class="flex flex-col w-full gap-4">
                         <label class="font-poppins" for="last_name">Achternaam</label>
                         <input type="text" id="last_name" name="last_name"
-                               class="border-2 border-black rounded p-2 font-poppins"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
                         <p class="font-poppins font-bold text-red-600 text-xl">
                             <?= ($errors['emptyLastName']) ?? '' ?>
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-row gap-4">
-                    <div class="flex flex-col text-center">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col w-full">
                         <label class="font-poppins" for="email">Email</label>
                         <input type="email" id="email" name="email"
-                               class="border-2 border-black rounded p-2 font-poppins"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
                         <p class="font-bold font-poppins text-red-600 text-xl">
                             <?= ($errors['emptyEmail']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center">
+                    <div class="flex flex-col w-full mb-4">
                         <label class="font-poppins" for="phone_number">Telefoon Nummer</label>
                         <input type="number" id="phone_number" name="phone_number"
-                               class="border-2 border-black rounded p-2 font-poppins"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
                         <p class="font-asap font-bold text-red-600 text-xl">
                             <?= ($errors['emptyPhoneNumber']) ?? '' ?>
                         </p>
                     </div>
                 </div>
-                <label for="comment">Comment</label>
+                <label for="comment">Opmerking</label>
                 <textarea type="text" id="comment" name="comment"
-                          class="border-2 border-black rounded p-2 font-poppins"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
-                <input type="submit" name="submit" value="Bevestig Keuze" class="border-2 border-black rounded p-2">
+                          class="border-2 border-black rounded p-2 font-poppins mb-5 text-black"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
+                <input type="submit" name="submit" value="Bevestig Keuze"
+                       class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-full transition ease-in-out delay-150">
             </div>
         </form>
     </main>
@@ -423,8 +432,7 @@ if (isset($_POST['submit'])) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
-        <li><a href="#over">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
     </ul>
 </footer>
 </body>

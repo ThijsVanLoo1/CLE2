@@ -17,12 +17,14 @@ main {
     display: grid;
     grid-template-rows: 4em 5em auto;
 }
+
 @media (max-width: 600px) {
     main {
         width: 100%;
         margin: 0px;
     }
 }
+
 .title {
     background: #003060;
     text-align: center;
@@ -85,21 +87,27 @@ main {
 .col.monday {
     grid-column: 3;
 }
+
 .col.tuesday {
     grid-column: 4;
 }
+
 .col.wednesday {
     grid-column: 5;
 }
+
 .col.thursday {
     grid-column: 6;
 }
+
 .col.friday {
     grid-column: 7;
 }
+
 .col.saturday {
     grid-column: 8;
 }
+
 .col.sunday {
     grid-column: 9;
 }
@@ -138,4 +146,8 @@ main {
 
 .current {
     font-weight: bold;
+}
+
+.form {
+    height: 100vh;
 }

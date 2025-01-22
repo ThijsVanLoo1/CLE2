@@ -33,21 +33,7 @@ while ($time <= $endTime) {
 
 $availableTimes = [];
 
-$link = "login.php";
-$text = "Login";
-
-if (!empty($_SESSION) === true) {
-    $link = "logout.php";
-    $text = "Logout";
-} else {
-    $link = "login.php";
-    $text = "Login";
-}
 $adminKey = $_SESSION['admin_key'];
-// Pakt de geseleceteerde user van de admin
-if ($_SESSION['admin_key'] === '1') {
-    $adminKey = $_SESSION['admin_key'];
-}
 // Kijkt of iemand een admin is
 if ($adminKey === '1') {
     // Maakt een query aan voor de admin
@@ -107,7 +93,7 @@ if (isset($_POST['submit'])) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
     <link href="output.css" rel="stylesheet">
-    <title>Home</title>
+    <title>Edit</title>
 </head>
 <body class="font-sans">
 <script>
@@ -188,7 +174,7 @@ if (isset($_POST['submit'])) {
                     select.setAttribute('id', 'times');
                     select.setAttribute('name', 'times');
                     select.setAttribute('onchange', 'showData()');
-                    select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
+                    select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded text-black');
 
                     // Voeg beschikbare tijden to.
                     data.forEach((time) => {
@@ -259,8 +245,7 @@ if (isset($_POST['submit'])) {
     </div>
     <div class="hidden md:flex gap-6 nav-links p-8">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
-        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
+        <a href="logout.php" class="text-white hover:text-[#003060]">Logout</a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -271,18 +256,14 @@ if (isset($_POST['submit'])) {
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
-    <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+    <a href="logout.php" class="text-white block text-center p-2 bg-[#003060] border-b">Logout</a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
-    <a href="" class="hover:text-[#003060] block ">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
+    <a href="logout.php" class="text-white hover:text-[#003060] block ">Logout</a>
 </div>
-<main class="h-100v w-full flex justify-center items-center m-auto flex-col gap-4">
-    <h1 class=" text-xl">Wijzig reservatie</h1>
+<main class="mb-32 w-full flex justify-center items-center m-auto flex-col gap-4">
+    <h1 class=" text-xl p-6">Wijzig reservatie</h1>
     <form method="post" action="" class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]">
         <div id="teacher-container" class="mt-4 hidden p-2">
             <label for="user_id" class="block font-asap"></label>
@@ -312,11 +293,11 @@ if (isset($_POST['submit'])) {
         </div>
         <script type="text/javascript">showDays()</script>
 
-        <div id="time-container" class="w-full m-2 text-black"></div>
+        <div id="time-container" class="w-full m-2 text-white"></div>
         <div id="data-container" class="flex flex-col gap-4 rounded"
-             style="display: none; background-color: white;">
+             style="display: none;">
             <input type="submit" name="submit" value="Bevestig Keuze"
-                   class="border-2 border-black rounded p-4 bg-white text-black">
+                   class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-full transition ease-in-out delay-150">
             <script type="text/javascript">fetchAvailableTimes()</script>
         </div>
     </form>
@@ -336,8 +317,7 @@ if (isset($_POST['submit'])) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
-        <li><a href="#over">Contact</a></li>
+        <li><a href="logout.php">Logout</a></li>
     </ul>
 </footer>
 
