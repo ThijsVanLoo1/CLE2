@@ -6,7 +6,7 @@
  */
 function getRosterTimes(): array
 {
-    return ['12:30', '12:40', '12:50','13:00' , '13:10', '13:20','13:30', '13:40', '13:50','14:00', '14:10', '14:20', '14:30', '14:40', '14:50', '15:00','15:10', '15:20', '15:30', '15:40', '15:50', '16:00','16:10', '16:20', '16:30', '16:40', '16:50', '17:00','17:10', '17:20', '17:30', '17:40', '17:50','18:00', '18:10', '18:20', '18:30', '18:40', '18:50', '19:00','19:10', '19:20', '19:30', '19:40', '19:50', '20:00','20:10', '20:20', '20:30', '20:40'];
+    return ['12:30', '12:40', '12:50', '13:00', '13:10', '13:20', '13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30', '14:40', '14:50', '15:00', '15:10', '15:20', '15:30', '15:40', '15:50', '16:00', '16:10', '16:20', '16:30', '16:40', '16:50', '17:00', '17:10', '17:20', '17:30', '17:40', '17:50', '18:00', '18:10', '18:20', '18:30', '18:40', '18:50', '19:00', '19:10', '19:20', '19:30', '19:40', '19:50', '20:00', '20:10', '20:20', '20:30', '20:40'];
 }
 
 /**
@@ -31,7 +31,7 @@ function getWeekDays(int $timestamp): array
             'fullDate' => date('Y-m-d', $dayTimestamp),
             'day' => date('D', $dayTimestamp),
             'dayNumber' => date('d', $dayTimestamp),
-            'current' => date('d', $dayTimestamp) === date('d')
+            'current' => date('Y/m/d', $dayTimestamp) === date('Y/m/d')
         ];
     }
     return $dates;
@@ -68,16 +68,15 @@ function formatEvent(array $event): array
  * @param string $to
  * @return array
  */
-function getEvents(string $teacher_id,string $from, string $to): array
+function getEvents(string $teacher_id, string $from, string $to): array
 {
     global $db;
     require_once "database.php";
 
     //Get the result set from the database with an SQL query
-    if($_SESSION['admin_key'] == 1) {
+    if ($_SESSION['admin_key'] == 1) {
         $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $teacher_id";
-    }
-    else {
+    } else {
         $id = $_SESSION['id'];
         $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $id";
     }
