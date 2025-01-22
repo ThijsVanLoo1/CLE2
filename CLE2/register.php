@@ -61,8 +61,8 @@ if (isset($_POST['submit'])) {
     </div>
     <div class="hidden md:flex gap-6 nav-links">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
-        <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
+        <a href="admin.php" class="text-white hover:text-[#003060]">Overzicht</a>
+        <a href="logout.php" class="text-white hover:text-[#003060]">Logout</a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>

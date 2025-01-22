@@ -21,6 +21,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $teachers[] = $row;
 }
 
+//this is selected user
 $admin_id = $_GET['user'] ?? 0;
 
 //Get the current week from the GET or default to 0 (current week)
@@ -65,7 +66,7 @@ $hidden = "hidden";
     <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <style><?= getDynamicCSS($rosterTimes, $events); ?></style>
-    <title>Docent - Overzicht</title>
+    <title>Admin - Overzicht</title>
 </head>
 <body>
 <nav class="flex items-center justify-between p-6 bg-[#04588D]">
@@ -77,10 +78,9 @@ $hidden = "hidden";
     </div>
     <div class="hidden md:flex gap-6 nav-links p-8">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="reservation.php" class="text-white hover:text-[#003060] <?= $hidden ?>">Afspraak maken</a>
         <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
-        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
         <a href="<?= $link_register; ?>" class="text-white hover:text-[#003060]"><?= $text_register; ?></a>
+        <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -91,8 +91,6 @@ $hidden = "hidden";
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b <?= $hidden ?>">Afspraak
-        maken</a>
     <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
     <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
     <a href="<?= $link_register; ?>"
@@ -100,7 +98,6 @@ $hidden = "hidden";
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
     <a href="" class="hover:text-[#003060] block ">Contact</a>
     <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
     <a href="<?= $link_register; ?>" class="text-white hover:text-[#003060] block"><?= $text_register; ?></a>
@@ -129,12 +126,12 @@ $hidden = "hidden";
 
             // Add a click event listener to the button
             button.addEventListener('click', function () {
-                let result = "Weet je zeker dat je deze gebruiker wilt verwijderen?";
+                let result = "Weet je zeker dat je de gebruiker wilt verwijderen?";
                 confirm(result);
                 if (result) {
-                    window.location.href = "deleteuser.php?id=<?= $id ?>";
+                    window.location.href = "deleteuser.php?id=<?= $admin_id ?>";
                 } else {
-                    window.location.href = "admin.php?id=<?= $id ?>";
+                    window.location.href = "admin.php?id=<?= $admin_id ?>";
                 }
             });
         }

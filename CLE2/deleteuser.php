@@ -10,5 +10,5 @@ $queryDelete = "DELETE FROM users WHERE id = $id";
 $result = mysqli_query($db, $queryDelete)
 or die('Error ' . mysqli_error($db) . ' with query ' . $queryDelete);
 
-header("Location: overview.php");
+header("Location: admin.php");
 ?>

@@ -412,7 +412,7 @@ if (isset($_POST['submit'])) {
                 <textarea type="text" id="comment" name="comment"
                           class="border-2 border-black rounded p-2 font-poppins mb-5"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
                 <input type="submit" name="submit" value="Bevestig Keuze"
-                       class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-1/2 transition ease-in-out delay-150">
+                       class="rounded-lg bg-white font-bold text-[#] p-2 hover:bg-[#04599D] hover:text-white w-1/2 transition ease-in-out delay-150">
             </div>
         </form>
     </main>
@@ -432,8 +432,7 @@ if (isset($_POST['submit'])) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
-        <li><a href="#over">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
     </ul>
 </footer>
 </body>
