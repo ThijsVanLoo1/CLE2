@@ -124,9 +124,9 @@ if (isset($_POST['submit'])) {
         $_SESSION['date'] = $date;
         $_SESSION['docent_id'] = $user_id;
         $_SESSION['comment'] = $comment;
-        if ($_SESSION['login'] === true){
+        if ($_SESSION['login'] === true) {
             $_SESSION['login'] = true;
-        }else{
+        } else {
             $_SESSION['login'] = false;
         }
 
@@ -327,7 +327,7 @@ if (isset($_POST['submit'])) {
 
 <header class="flex justify-center text-4xl font-bold font-asap text-[#04588D] m-12">Rooster</header>
 <body class="min-h-screen flex flex-col">
-<div class="h-100v">
+<div class="mb-40">
     <main class="w-full flex justify-center items-center m-auto flex-col gap-4 text-black p-3">
         <form class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]" method="post" action="">
             <div id="teacher-container" class="mt-4 p-2">
@@ -367,9 +367,9 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div id="time-container"></div>
-            <div id="data-container" class="flex flex-col items-center" style="display: none;">
-                <div class="flex flex-row gap-3">
-                    <div class="flex flex-col text-center w-full">
+            <div id="data-container" class="flex flex-col" style="display: none;">
+                <div class="flex lg:flex-col gap-4 flex-col">
+                    <div class="flex flex-col w-full">
                         <label class="font-poppins" for="first_name">Voornaam</label>
                         <input type="text" id="first_name" name="first_name"
                                class="border-2 border-black rounded p-2 text-black w-full"
@@ -378,7 +378,7 @@ if (isset($_POST['submit'])) {
                             <?= ($errors['emptyFirstName']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center w-full">
+                    <div class="flex flex-col w-full gap-4">
                         <label class="font-poppins" for="last_name">Achternaam</label>
                         <input type="text" id="last_name" name="last_name"
                                class="border-2 border-black rounded p-2 font-poppins w-full"
@@ -388,8 +388,8 @@ if (isset($_POST['submit'])) {
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-row gap-4">
-                    <div class="flex flex-col text-center w-full">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col w-full">
                         <label class="font-poppins" for="email">Email</label>
                         <input type="email" id="email" name="email"
                                class="border-2 border-black rounded p-2 font-poppins w-full"
@@ -398,7 +398,7 @@ if (isset($_POST['submit'])) {
                             <?= ($errors['emptyEmail']) ?? '' ?>
                         </p>
                     </div>
-                    <div class="flex flex-col text-center w-full">
+                    <div class="flex flex-col w-full mb-4">
                         <label class="font-poppins" for="phone_number">Telefoon Nummer</label>
                         <input type="number" id="phone_number" name="phone_number"
                                class="border-2 border-black rounded p-2 font-poppins w-full"
@@ -410,9 +410,9 @@ if (isset($_POST['submit'])) {
                 </div>
                 <label for="comment">Opmerking</label>
                 <textarea type="text" id="comment" name="comment"
-                          class="border-2 border-black rounded p-2 font-poppins mb-5"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
+                          class="border-2 border-black rounded p-2 font-poppins mb-5 text-black"><?= htmlspecialchars($_POST['comment'] ?? $comment ?? "") ?></textarea>
                 <input type="submit" name="submit" value="Bevestig Keuze"
-                       class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-1/2 transition ease-in-out delay-150">
+                       class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-full transition ease-in-out delay-150">
             </div>
         </form>
     </main>
@@ -432,8 +432,7 @@ if (isset($_POST['submit'])) {
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
-        <li><a href="#over">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
     </ul>
 </footer>
 </body>
