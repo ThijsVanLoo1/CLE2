@@ -74,7 +74,7 @@ function getEvents(string $teacher_id, string $from, string $to): array
     require_once "database.php";
 
     //Get the result set from the database with an SQL query
-    if ($_SESSION['admin_key'] == 1) {
+    if ($_SESSION['admin_key'] === '1') {
         $query = "SELECT * FROM reservations WHERE date >= '$from' AND date <= '$to' AND  user_id = $teacher_id";
     } else {
         $id = $_SESSION['id'];

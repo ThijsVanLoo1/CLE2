@@ -65,7 +65,7 @@ $docent = $row;
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
     <a href="" class="hover:text-[#003060] block ">Contact</a>
 </div>
-<header class="sm:flex flex h-100v w-100w bg-[#003060] border-b border-black xl:p-20 xl:mx-52 p-5 flex-col gap-4 xl:h-70v">
+<header class="sm:flex flex h-70v w-100w bg-[#003060] border-b border-black xl:p-20 xl:mx-52 p-5 flex-col gap-4 xl:h-70v">
     <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je
         reservatie <?= $_SESSION['first_name'] ?> <?= $_SESSION['last_name'] ?></h1>
     <p class="text-white text-base">

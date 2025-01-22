@@ -381,7 +381,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col w-full gap-4">
                         <label class="font-poppins" for="last_name">Achternaam</label>
                         <input type="text" id="last_name" name="last_name"
-                               class="border-2 border-black rounded p-2 font-poppins w-full"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['last_name'] ?? $last_name ?? "") ?>">
                         <p class="font-poppins font-bold text-red-600 text-xl">
                             <?= ($errors['emptyLastName']) ?? '' ?>
@@ -392,7 +392,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col w-full">
                         <label class="font-poppins" for="email">Email</label>
                         <input type="email" id="email" name="email"
-                               class="border-2 border-black rounded p-2 font-poppins w-full"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['email'] ?? $email ?? "") ?>">
                         <p class="font-bold font-poppins text-red-600 text-xl">
                             <?= ($errors['emptyEmail']) ?? '' ?>
@@ -401,7 +401,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col w-full mb-4">
                         <label class="font-poppins" for="phone_number">Telefoon Nummer</label>
                         <input type="number" id="phone_number" name="phone_number"
-                               class="border-2 border-black rounded p-2 font-poppins w-full"
+                               class="border-2 border-black rounded p-2 font-poppins w-full text-black"
                                value="<?= htmlspecialchars($_POST['phone_number'] ?? $phone_number ?? "") ?>">
                         <p class="font-asap font-bold text-red-600 text-xl">
                             <?= ($errors['emptyPhoneNumber']) ?? '' ?>
