@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['user_
     $timeRemoval = 3;
     $removeIncrease = 6;
     $totalRemoved = 0;
+    //28, 29.
 
     //Maak de lijst van tijden.
     while ($time <= $endTime) {
@@ -37,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['date'], $_POST['user_
     for ($totalRemoved = 0; $totalRemoved <= 8; $totalRemoved++) {
         unset($times[$timeRemoval]);
         $timeRemoval = $timeRemoval + $removeIncrease;
+        unset($times[28]);
+        unset($times[29]);
     }
 
     // Haal de bezette tijden eruit.
