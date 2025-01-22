@@ -121,7 +121,24 @@ $hidden = "hidden";
             Filter
         </button>
     </form>
-    <a href="editweeks.php" class="w-1/6 text-center rounded-lg bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D] p-2">Verander beschikbare weken</a>
+    <button id="deleteUser" onclick="buttonClicker()" class="rounded-lg text-center bg-[#FF0000] font-bold text-white p-2 hover:bg-[#CC0202]">Verwijderen</button>
+    <script>
+        function buttonClicker() {
+            // Get the button element
+            const button = document.getElementById('deleteUser');
+
+            // Add a click event listener to the button
+            button.addEventListener('click', function () {
+                let result = "Weet je zeker dat je deze gebruiker wilt verwijderen?";
+                confirm(result);
+                if (result) {
+                    window.location.href = "deleteuser.php?id=<?= $id ?>";
+                } else {
+                    window.location.href = "admin.php?id=<?= $id ?>";
+                }
+            });
+        }
+    </script>
     <a class="rounded-lg bg-[#04588D] font-bold text-white p-2 hover:bg-[#04599D] p-2"
        href="?week=0&user=<?= $admin_id ?>">Terug naar huidige week</a>
 </header>
