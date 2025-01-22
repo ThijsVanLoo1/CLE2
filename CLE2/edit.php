@@ -34,10 +34,6 @@ while ($time <= $endTime) {
 $availableTimes = [];
 
 $adminKey = $_SESSION['admin_key'];
-// Pakt de geseleceteerde user van de admin
-if ($_SESSION['admin_key'] === '1') {
-    $adminKey = $_SESSION['admin_key'];
-}
 // Kijkt of iemand een admin is
 if ($adminKey === '1') {
     // Maakt een query aan voor de admin
@@ -97,7 +93,7 @@ if (isset($_POST['submit'])) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css2?family=Asap:wght@100..900&display=swap" rel="stylesheet">
     <link href="output.css" rel="stylesheet">
-    <title>Home</title>
+    <title>Edit</title>
 </head>
 <body class="font-sans">
 <script>
@@ -178,7 +174,7 @@ if (isset($_POST['submit'])) {
                     select.setAttribute('id', 'times');
                     select.setAttribute('name', 'times');
                     select.setAttribute('onchange', 'showData()');
-                    select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded');
+                    select.setAttribute('class', 'flex flex-col items-center mt-4 border-2 border-black rounded text-black');
 
                     // Voeg beschikbare tijden to.
                     data.forEach((time) => {
@@ -266,8 +262,8 @@ if (isset($_POST['submit'])) {
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
     <a href="logout.php" class="text-white hover:text-[#003060] block ">Logout</a>
 </div>
-<main class="h-100v w-full flex justify-center items-center m-auto flex-col gap-4">
-    <h1 class=" text-xl">Wijzig reservatie</h1>
+<main class="mb-32 w-full flex justify-center items-center m-auto flex-col gap-4">
+    <h1 class=" text-xl p-6">Wijzig reservatie</h1>
     <form method="post" action="" class="w-full max-w-md p-8 border-black border-2 rounded text-white bg-[#003060]">
         <div id="teacher-container" class="mt-4 hidden p-2">
             <label for="user_id" class="block font-asap"></label>
@@ -297,11 +293,11 @@ if (isset($_POST['submit'])) {
         </div>
         <script type="text/javascript">showDays()</script>
 
-        <div id="time-container" class="w-full m-2 text-black"></div>
+        <div id="time-container" class="w-full m-2 text-white"></div>
         <div id="data-container" class="flex flex-col gap-4 rounded"
-             style="display: none; background-color: white;">
+             style="display: none;">
             <input type="submit" name="submit" value="Bevestig Keuze"
-                   class="border-2 border-black rounded p-4 bg-white text-black">
+                   class="rounded-lg bg-white font-bold text-[#04599D] p-2 hover:bg-[#04599D] hover:text-white w-full transition ease-in-out delay-150">
             <script type="text/javascript">fetchAvailableTimes()</script>
         </div>
     </form>
