@@ -5,7 +5,8 @@ $text = "Login";
 $link_login = "";
 $text_overview = "";
 $hidden = "";
-if (!empty($_SESSION) === true) {
+
+if (isset($_SESSION['user'])) {
     $link = "logout.php";
     $text = "Logout";
     $link_login = "overview.php";
@@ -14,6 +15,8 @@ if (!empty($_SESSION) === true) {
 } else {
     $link = "login.php";
     $text = "Login";
+    $hidden = "";
+    $hidden_overview ="hidden";
 }
 ?>
 <!doctype html>
@@ -38,8 +41,8 @@ if (!empty($_SESSION) === true) {
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
         <a href="reservation.php" class="text-white hover:text-[#003060] <?=$hidden?>">Afspraak maken</a>
         <a href="contact.html" class="text-white hover:text-[#003060]">Contact</a>
+        <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060] <?= $hidden_overview ?>"><?= $text_overview; ?></a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
-        <a href="<?= $link_login; ?>" class="text-white hover:text-[#003060]"><?= $text_overview; ?></a>
     </div>
     <div id="mobile-menu" class="menu-toggle md:hidden cursor-pointer flex flex-col gap-1">
         <span class="w-8 h-1 bg-white rounded transition-all"></span>
@@ -52,8 +55,8 @@ if (!empty($_SESSION) === true) {
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
     <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b <?=$hidden?>">Afspraak maken</a>
     <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link_login; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text_overview; ?></a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
+    <a href="<?= $link_login; ?>" class="text-white block text-center p-2 bg-[#003060] border-b <?= $hidden_overview ?>"><?= $text_overview; ?></a>
+    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b <?= $hidden?>"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>

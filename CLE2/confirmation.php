@@ -2,6 +2,7 @@
 session_start();
 global $db;
 require_once "includes/database.php";
+
 $docent = $_SESSION['docent_id'];
 if ($_SESSION['login']) {
     $link = "logout.php";
@@ -46,7 +47,6 @@ $docent = $row;
     </div>
     <div class="hidden md:flex gap-6 nav-links">
         <a href="index.php" class="text-white hover:text-[#003060]">Home</a>
-        <a href="reservation.php" class="text-white hover:text-[#003060]">Afspraak maken</a>
         <a href="#" class="text-white hover:text-[#003060]">Contact</a>
         <a href="<?= $link; ?>" class="text-white hover:text-[#003060]"><?= $text; ?></a>
     </div>
@@ -59,15 +59,11 @@ $docent = $row;
 
 <div class="nav-links hidden flex-col gap-4 bg-[#04588D] md:hidden " id="nav-links">
     <a href="index.php" class="text-white block text-center p-2 bg-[#003060] border-b border-t">Home</a>
-    <a href="reservation.php" class="text-white block text-center p-2 bg-[#003060] border-b">Afspraak maken</a>
     <a href="#" class="text-white block text-center p-2 bg-[#003060] border-b">Contact</a>
-    <a href="<?= $link; ?>" class="text-white block text-center p-2 bg-[#003060] border-b"><?= $text; ?></a>
 </div>
 <div id="mobile-menu" class="hidden sm:hidden flex flex-col gap-2 p-4 bg-[#04588D] text-white">
     <a href="index.php" class="hover:text-[#003060] block ">Home</a>
-    <a href="reservation.php" class="hover:text-[#003060] block ">Afspraak maken</a>
     <a href="" class="hover:text-[#003060] block ">Contact</a>
-    <a href="<?= $link; ?>" class="text-white hover:text-[#003060] block "><?= $text; ?></a>
 </div>
 <header class="sm:flex flex h-100v w-100w bg-[#003060] border-b border-black xl:p-20 xl:mx-52 p-5 flex-col gap-4 xl:h-70v">
     <h1 class="text-white xl:text-4xl text-xl ">Bedankt voor je
@@ -98,7 +94,6 @@ $docent = $row;
     </div>
     <ul class="text-white flex flex-col gap-2 font-bold py-4">
         <li><a href="index.php">Home</a></li>
-        <li><a href="reservation.php">Afspraak maken</a></li>
         <li><a href="#over">Contact</a></li>
     </ul>
 </footer>

@@ -1047,6 +1047,10 @@ video {
   color: rgb(4 89 157 / var(--tw-text-opacity, 1));
 }
 
+.text-\[\#\] {
+  color: #;
+}
+
 .transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
